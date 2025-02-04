@@ -1,3 +1,7 @@
 scp -i Key_1.pem -r company_site/company_site ec2-user@ec2-18-190-217-162.us-east-2.compute.amazonaws.com:/home/ec2-user/
 
 ssh -i "Key_1.pem" ec2-user@ec2-18-190-217-162.us-east-2.compute.amazonaws.com 
+
+
+"virtual_env\Scripts\activate"
+"manage.py runserver"
