@@ -4,3 +4,6 @@
 
 # Collect Static Files for Deployment
 python manage.py collectstatic
+
+# Make Migrations
+python manage.py migrate
