@@ -1,9 +1,16 @@
 Copy Files
-scp -i Key_1.pem -r company_site/company_site ec2-user@ec2-18-190-217-162.us-east-2.compute.amazonaws.com:/home/ec2-user/
+scp -i Key_1.pem -r company_site  admin@ec2-18-219-33-192.us-east-2.compute.amazonaws.com:/home/admin/
 
 Terminal
-ssh -i "Key_1.pem" ec2-user@ec2-18-190-217-162.us-east-2.compute.amazonaws.com 
+ssh -i "Key_1.pem"  admin@ec2-18-219-33-192.us-east-2.compute.amazonaws.com 
 
 Venv
 source virtual_env/bin/activate
 
+
+
+
+Setting Up NGINX -> GUNICORN
+sudo yum clean metadata
+sudo yum -y install nginx
+nginx -v
