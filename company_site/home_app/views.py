@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+from home_app.models import MeetingLog
 
 
 def home_screen(request):
@@ -11,4 +12,5 @@ def crew(request):
     return render(request, 'home_app/crew.html')
 
 def meeting_logs(request):
-    return render(request, 'home_app/meeting_logs.html')
+    all_logs = MeetingLog.objects.all()
+    return render(request, 'home_app/meeting_logs.html', {'log_list': all_logs})
