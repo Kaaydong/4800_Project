@@ -30,6 +30,9 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+# Bootstrap Templates
+# https://startbootstrap.com/template/full-width-pics
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,6 +129,5 @@ STATIC_ROOT = BASE_DIR / "static_collection"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "home_app/static/css",
-    BASE_DIR / "home_app/static/png",
+    BASE_DIR / "home_app/static",
 ]
