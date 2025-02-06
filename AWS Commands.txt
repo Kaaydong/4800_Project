@@ -4,13 +4,5 @@ scp -i Key_1.pem -r company_site  admin@ec2-18-219-33-192.us-east-2.compute.amaz
 Terminal
 ssh -i "Key_1.pem"  admin@ec2-18-219-33-192.us-east-2.compute.amazonaws.com 
 
-Venv
-source virtual_env/bin/activate
-
-
-
-
-Setting Up NGINX -> GUNICORN
-sudo yum clean metadata
-sudo yum -y install nginx
-nginx -v
+Virtual Environment
+source venv/bin/activate
