@@ -46,9 +46,11 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <!-- Log Entry -->
-                    {% for log in log_list %}
+                    {% for log, present, absent in combined_log_list %}
                         <div style="white-space: pre-line;">
                             <h2 class="post-title">{{ log.meeting_name }}</h2>
+                            <p class="lead">Absent: {{ absent }}</p>
+                            <p class="lead">Present: {{ present }}</p>
                             <p class="mb-3">{{ log.all_meeting_text }}</p>
                             <p>{{ log.date_submitted|date:"F j, Y" }} </p>
                         </div>
