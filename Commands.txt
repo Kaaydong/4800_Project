@@ -6,7 +6,8 @@
 python manage.py collectstatic
 
 # Make Migrations
-python manage.py migrate
+python manage.py migrate 
+python manage.py migrate --database=postgres_db
 
 # Model Migrations
 python manage.py makemigrations home_app

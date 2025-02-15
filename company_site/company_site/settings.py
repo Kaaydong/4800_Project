@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://18.219.33.192', '18.219.33.192']
+#CSRF_TRUSTED_ORIGINS = ['http://18.219.33.192', '18.219.33.192']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'home_app',
+    'video_site',
 ]
 
 MIDDLEWARE = [
@@ -84,8 +85,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+
+    'postgres_db': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbtest', 
+        'USER': 'postgres',
+        'PASSWORD': '123potato321',
+        'HOST': 'localhost', 
+        'PORT': '5432',
     }
 }
+
+DATABASE_ROUTERS = ['video_site.routers.Postgres_Router']
 
 
 # Password validation
