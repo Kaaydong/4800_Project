@@ -6,3 +6,16 @@ ssh -i "Key_1.pem"  admin@ec2-18-219-33-192.us-east-2.compute.amazonaws.com
 
 Virtual Environment
 source venv/bin/activate
+
+
+
+MAKE SURE:
+Postgres Host, Database Name, Password
+Migrate and Makemigrations
+Collect Static
+
+# Collect Static Files for Deployment
+python manage.py collectstatic
+
+# Make Migrations
+python manage.py migrate 
