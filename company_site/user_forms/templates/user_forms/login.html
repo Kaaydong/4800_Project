@@ -41,17 +41,17 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="theme-menu" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme">
-                                {{ ACCOUNT_INFO.0 }}
+                                Guest
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.0 }}">
-                                        <span class="ms-2">{{ ACCOUNT_INFO.1 }}</span>
+                                    <a type="button" class="dropdown-item d-flex align-items-center" href="/users/login">
+                                        <span class="ms-2">Login</span>
                                     </a>
                                     </li>
                                     <li>
-                                    <a type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.1 }}">
-                                        <span class="ms-2">{{ ACCOUNT_INFO.2 }}</span>
+                                    <a type="button" class="dropdown-item d-flex align-items-center" href="/users/register">
+                                        <span class="ms-2">Register</span>
                                     </a>
                                 </li>
                             </ul>
@@ -62,6 +62,23 @@
         </div>
 
 
+        <div class="container" style="width:700px; padding-top:10em;">
+            <div class="card text-white bg-primary mb-3 rounded-4">
+                <div class="card-header">
+                    <h3><strong>Login</strong></h3>
+                </div>
+                <div class="card-body">
+                    <form class="form-with-validation" action="/users/login" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button class="form-submit btn btn-light btn-lg rounded-4">Submit</button>
+                    </form>
+                </div>
+                <div class="container" style="padding-bottom:1em; text-align:center;"> 
+                    <a class="text-light" href="/users/register">No Account? Register Here</a>
+                </div>
+            </div>            
+        </div>
 
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
