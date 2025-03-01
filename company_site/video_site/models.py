@@ -1,6 +1,6 @@
 from django.db import models
 from pygments.lexer import default
-
+from django.contrib.auth import get_user_model
 
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
@@ -44,28 +44,34 @@ class MovieActorEntry(models.Model):
     actor_key = models.ForeignKey(Actor, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.movie_key + " | " + self.actor_key
+        return str(self.movie_key) + " | " + str(self.actor_key)
 
 
-class MovieEntry(models.Model):
+class MovieGenreEntry(models.Model):
     movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
     genre_key = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.movie_key + " | " + self.genre_key
-
-
+        return str(self.movie_key) + " | " + str(self.genre_key)
 
 
 class WatchEntry(models.Model):
     watch_entry_id = models.AutoField(primary_key=True)
-    user_key = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_key = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
     watch_progress = models.FloatField(default = 0)
     updated_at = models.DateField()
 
+    def __str__(self):
+        return str(self.movie_key) + " | " + str(self.user_key)
+    
+
+
 class BookmarkEntry(models.Model):
     bookmark_entry_id = models.AutoField(primary_key=True)
-    user_key = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_key = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.movie_key) + " | " + str(self.user_key)
 
