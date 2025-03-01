@@ -1,4 +1,6 @@
 from django.db import models
+from pygments.lexer import default
+
 
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
@@ -56,9 +58,14 @@ class MovieEntry(models.Model):
 
 
 class WatchEntry(models.Model):
-
-
+    watch_entry_id = models.AutoField(primary_key=True)
+    user_key = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    watch_progress = models.FloatField(default = 0)
+    updated_at = models.DateField()
 
 class BookmarkEntry(models.Model):
-
+    bookmark_entry_id = models.AutoField(primary_key=True)
+    user_key = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
