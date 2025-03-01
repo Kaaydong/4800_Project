@@ -36,6 +36,7 @@ CSRF_TRUSTED_ORIGINS = ['http://18.219.33.192']
 # https://startbootstrap.com/template/full-width-pics
 
 INSTALLED_APPS = [
+    #'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -84,6 +85,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'company_site.wsgi.application'
+ASGI_APPLICATION = "company_site.asgi.application"
 
 
 # Database
