@@ -36,7 +36,8 @@ CSRF_TRUSTED_ORIGINS = ['http://18.219.33.192']
 # https://startbootstrap.com/template/full-width-pics
 
 INSTALLED_APPS = [
-    #'channels',
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -61,7 +61,52 @@
             </div>
         </div>
 
+        <div>
+            <br>
+            <br>
+            <textarea name="ta" id="results" cols="150" rows="30">
 
+            </textarea><br>
+            <input type="button" id="submit" value="Get Database">
+            <script>
+                let url = 'ws://' + window.location.host + '/ws/socket-server/';
+                const socket = new WebSocket(url);
+                socket.onmessage = function(e) {
+                    console.log(e.data);
+
+                    users = JSON.parse(e.data).users;
+                    movies = JSON.parse(e.data).movies;
+                    genres = JSON.parse(e.data).genres;
+                    actors = JSON.parse(e.data).actors;
+                    movieActorEntries = JSON.parse(e.data).movieActorEntries;
+                    movieGenreEntries = JSON.parse(e.data).movieGenreEntries;
+                    watchEntries = JSON.parse(e.data).watchEntries;
+                    bookmarkEntries = JSON.parse(e.data).bookmarkEntries;
+                    
+                    document.getElementById("results").value = "[ Users ]\n" + users + "\n\n";
+                    document.getElementById("results").value += "[ Movies ]\n" + movies + "\n\n";
+                    document.getElementById("results").value += "[ Genres ]\n" + genres + "\n\n";
+                    document.getElementById("results").value += "[ Actors ]\n" + actors + "\n\n";
+                    document.getElementById("results").value += "[ Movie Actor Entries ]\n" + movieActorEntries + "\n\n";
+                    document.getElementById("results").value += "[ Movie Genre Entries ]\n" + movieGenreEntries + "\n\n";
+                    document.getElementById("results").value += "[ Watch Entries ]\n" + watchEntries + "\n\n";
+                    document.getElementById("results").value += "[ Bookmark Entries ]\n" + bookmarkEntries + "\n\n";
+                }
+        
+                socket.onclose = function(e) {
+                    console.log("Socket closed!");
+                }
+        
+                document.querySelector("#submit").onclick = function(e) {
+                    exp = 0;
+                    socket.send(JSON.stringify(
+                        {
+                            expression: exp
+                        }
+                    ))
+                }
+            </script>
+        </div>
 
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
