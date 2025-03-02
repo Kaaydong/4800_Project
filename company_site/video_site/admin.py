@@ -1,12 +1,13 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Movie, Genre, Actor, MovieActorEntry, MovieGenreEntry, WatchEntry, BookmarkEntry
+from . import models
 
-admin.site.register(Movie)
-admin.site.register(Genre)
-admin.site.register(Actor)
-admin.site.register(MovieActorEntry)
-admin.site.register(MovieGenreEntry)
-admin.site.register(WatchEntry)
-admin.site.register(BookmarkEntry)
+admin.site.register(models.Settings)
+admin.site.register(models.Movie)
+admin.site.register(models.Genre)
+admin.site.register(models.Actor)
+admin.site.register(models.MovieActorEntry)
+admin.site.register(models.MovieGenreEntry)
+admin.site.register(models.WatchEntry)
+admin.site.register(models.BookmarkEntry)

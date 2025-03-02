@@ -62,8 +62,7 @@
         </div>
 
         <div>
-            <br>
-            <br>
+            <br><br><br>
             <textarea name="ta" id="results" cols="150" rows="30">
 
             </textarea><br>
@@ -75,6 +74,7 @@
                     console.log(e.data);
 
                     users = JSON.parse(e.data).users;
+                    settings = JSON.parse(e.data).settings;
                     movies = JSON.parse(e.data).movies;
                     genres = JSON.parse(e.data).genres;
                     actors = JSON.parse(e.data).actors;
@@ -84,6 +84,7 @@
                     bookmarkEntries = JSON.parse(e.data).bookmarkEntries;
                     
                     document.getElementById("results").value = "[ Users ]\n" + users + "\n\n";
+                    document.getElementById("results").value += "[ Settings ]\n" + settings + "\n\n";
                     document.getElementById("results").value += "[ Movies ]\n" + movies + "\n\n";
                     document.getElementById("results").value += "[ Genres ]\n" + genres + "\n\n";
                     document.getElementById("results").value += "[ Actors ]\n" + actors + "\n\n";

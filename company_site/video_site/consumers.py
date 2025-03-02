@@ -19,6 +19,7 @@ class ConnectionTest(WebsocketConsumer):
         
         try:
             users = serialize('json', get_user_model().objects.all())
+            settings = serialize('json', models.Settings.objects.all())
             movies = serialize('json', models.Movie.objects.all())
             genres = serialize('json', models.Genre.objects.all())
             actors = serialize('json', models.Actor.objects.all())
@@ -32,6 +33,7 @@ class ConnectionTest(WebsocketConsumer):
 
         self.send(text_data=json.dumps({
             "users": users,
+            "settings": settings,
             "movies": movies,
             "genres": genres,
             "actors": actors,

@@ -2,6 +2,10 @@ from django.db import models
 from pygments.lexer import default
 from django.contrib.auth import get_user_model
 
+class Settings(models.Model):
+    user_key = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    safe_mode_enabled = models.BooleanField(default=False)
+
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=1024)
@@ -59,7 +63,8 @@ class WatchEntry(models.Model):
     watch_entry_id = models.AutoField(primary_key=True)
     user_key = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     movie_key = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    watch_progress = models.FloatField(default = 0)
+    watch_progress = models.FloatField(default=0)
+    user_rating = models.IntegerField(default=1)
     updated_at = models.DateField()
 
     def __str__(self):
