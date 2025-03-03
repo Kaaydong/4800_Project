@@ -18,27 +18,47 @@ class ConnectionTest(WebsocketConsumer):
         expression = text_data_json['expression']
         
         try:
-            users = serialize('json', get_user_model().objects.all())
-            settings = serialize('json', models.Settings.objects.all())
-            movies = serialize('json', models.Movie.objects.all())
-            genres = serialize('json', models.Genre.objects.all())
-            actors = serialize('json', models.Actor.objects.all())
-            movieActorEntries = serialize('json', models.MovieActorEntry.objects.all())
-            movieGenreEntries = serialize('json', models.MovieGenreEntry.objects.all())
-            watchEntries = serialize('json', models.WatchEntry.objects.all())
-            bookmarkEntries = serialize('json', models.BookmarkEntry.objects.all())
+            data = ""
+
+            data += "[ Users ]\n"
+            for item in get_user_model().objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Settings ]\n"
+            for item in models.Settings.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Movies ]\n"
+            for item in models.Movie.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Genres ]\n"
+            for item in models.Genre.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Actors ]\n"
+            for item in models.Actor.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Movie Actor Entries ]\n"
+            for item in models.MovieActorEntry.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Movie Genre Entries ]\n"
+            for item in models.MovieGenreEntry.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Watch Entries ]\n"
+            for item in models.WatchEntry.objects.all():
+                data += serialize('json', [item,]) + "\n"
+
+            data += "\n[ Bookmark Entries ]\n"
+            for item in models.BookmarkEntry.objects.all():
+                data += serialize('json', [item,]) + "\n"
 
         except Exception as e:
             print(e)
 
         self.send(text_data=json.dumps({
-            "users": users,
-            "settings": settings,
-            "movies": movies,
-            "genres": genres,
-            "actors": actors,
-            "movieActorEntries": movieActorEntries,
-            "movieGenreEntries": movieGenreEntries,
-            "watchEntries": watchEntries,
-            "bookmarkEntries": bookmarkEntries,
+            "key": data,
         }))

@@ -73,25 +73,8 @@
                 socket.onmessage = function(e) {
                     console.log(e.data);
 
-                    users = JSON.parse(e.data).users;
-                    settings = JSON.parse(e.data).settings;
-                    movies = JSON.parse(e.data).movies;
-                    genres = JSON.parse(e.data).genres;
-                    actors = JSON.parse(e.data).actors;
-                    movieActorEntries = JSON.parse(e.data).movieActorEntries;
-                    movieGenreEntries = JSON.parse(e.data).movieGenreEntries;
-                    watchEntries = JSON.parse(e.data).watchEntries;
-                    bookmarkEntries = JSON.parse(e.data).bookmarkEntries;
-                    
-                    document.getElementById("results").value = "[ Users ]\n" + users + "\n\n";
-                    document.getElementById("results").value += "[ Settings ]\n" + settings + "\n\n";
-                    document.getElementById("results").value += "[ Movies ]\n" + movies + "\n\n";
-                    document.getElementById("results").value += "[ Genres ]\n" + genres + "\n\n";
-                    document.getElementById("results").value += "[ Actors ]\n" + actors + "\n\n";
-                    document.getElementById("results").value += "[ Movie Actor Entries ]\n" + movieActorEntries + "\n\n";
-                    document.getElementById("results").value += "[ Movie Genre Entries ]\n" + movieGenreEntries + "\n\n";
-                    document.getElementById("results").value += "[ Watch Entries ]\n" + watchEntries + "\n\n";
-                    document.getElementById("results").value += "[ Bookmark Entries ]\n" + bookmarkEntries + "\n\n";
+                    text_data = JSON.parse(e.data).key;
+                    document.getElementById("results").value = text_data
                 }
         
                 socket.onclose = function(e) {
