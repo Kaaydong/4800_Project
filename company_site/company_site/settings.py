@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://18.219.33.192']
+CSRF_TRUSTED_ORIGINS = ['http://3.145.98.35']
 
 
 # Application definition
@@ -106,7 +106,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '123potato321',
         'HOST': 'localhost', 
-        # 'HOST': 'database1.cfasgyq44u47.us-east-2.rds.amazonaws.com', 
+        # 'HOST': 'database-1.cfasgyq44u47.us-east-2.rds.amazonaws.com', 
         'PORT': '5432',
     }
 }
