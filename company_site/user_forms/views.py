@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
+
+from . import models
 
 # Create your views here.
 def register_page(request):
@@ -8,6 +10,12 @@ def register_page(request):
         form = UserCreationForm(request.POST) 
         if form.is_valid(): 
             login(request, form.save())
+
+            # Create Settings instance for new User
+            user = get_user_model().objects.get(id=request.user.id)
+            settings_instance = models.Settings(user_key=user)
+            settings_instance.save()
+
             return redirect("/")
     else:
         form = UserCreationForm()
@@ -31,3 +39,13 @@ def login_page(request):
 def logout_view(request):
     logout(request) 
     return redirect("/")
+
+
+def account_settings_page(request):
+    if request.user.is_authenticated:
+        # Render info if User is logged in
+        account_info = [request.user.username]
+    else:
+        return redirect("/users/login")
+    
+    return render(request, "user_forms/account_settings.html", {'ACCOUNT_INFO': account_info})

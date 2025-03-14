@@ -45,7 +45,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.0 }}">
+                                    <a id="user_button" type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.0 }}">
                                         <span class="ms-2">{{ ACCOUNT_INFO.1 }}</span>
                                     </a>
                                     </li>
@@ -62,6 +62,212 @@
         </div>
 
         <div>
+            <style>
+                .modal {
+                        display: none; /* Hidden by default */
+                        position: fixed; /* Stay in place */
+                        z-index: 1; /* Sit on top */
+                        padding-top: 100px; /* Location of the box */
+                        left: 0;
+                        top: 0;
+                        width: 100%; /* Full width */
+                        height: 100%; /* Full height */
+                        overflow: auto; /* Enable scroll if needed */
+                        background-color: rgb(0,0,0); /* Fallback color */
+                        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                    }
+            </style>
+            
+            <!-- The Modal -->
+            <div id="user_modal" class="modal">
+            
+                <!-- Modal content -->
+                <div class="container" style="width:60%; padding-top:20px;">
+                    <div class="card text-white bg-info mb-3 rounded-4">
+                        <div class="card-header">
+                            <h3><strong>Account Settings</strong></h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="width:50%; padding-left:3em;">
+                                <label class="col-form-label col-form-label-lg mt-1" for="inputLarge">Username</label>
+                                <input class="form-control form-control-lg" type="text" placeholder="{{ ACCOUNT_INFO.0 }}" id="inputLarge1" disabled>
+
+                                <label class="col-form-label col-form-label-lg mt-3" for="inputLarge">Password</label>
+                                <input class="form-control form-control-lg" type="text" placeholder="*********" id="inputLarge2" disabled>
+                            </div>
+                            <div style="padding-left:3em; padding-top:2em">
+                                <label class="col-form-label col-form-label-lg mt-1" for="inputLarge">Max Age Restriction</label>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <script>
+                                        let url = 'ws://' + window.location.host + '/ws/socket-server/';
+                                        const socket = new WebSocket(url);
+                                        socket.onmessage = function(e) {
+                                            console.log(e.data);
+                                        }
+                                
+                                        socket.onclose = function(e) {
+                                            console.log("Socket closed!");
+                                        }
+                        
+                                        function send_age_rating_update(age_rating) {
+                                            socket.send(JSON.stringify(
+                                                {
+                                                    expression: age_rating
+                                                }
+                                            ))
+                                            console.log(age_rating)
+                                        }
+                                    </script>
+                                    {% if ACCOUNT_SETTINGS.0 == 1 %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(1)">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#G" aria-selected="true" 
+                                            role="tab">G</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(1)">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#G" aria-selected="false" 
+                                            role="tab" tabindex="-1">G</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 2 %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(2)">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#PG" aria-selected="true" 
+                                            role="tab">PG</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(2)">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#PG" aria-selected="false" 
+                                            role="tab" tabindex="-1">PG</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 3 %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(3)">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#PG-13" aria-selected="true" 
+                                            role="tab">PG-13</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(3)">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#PG-13" aria-selected="false" 
+                                            role="tab" tabindex="-1">PG-13</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 4 %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(4)">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#R" aria-selected="true" 
+                                            role="tab">R</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item" role="presentation" onclick="send_age_rating_update(4)">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#R" aria-selected="false" 
+                                            role="tab" tabindex="-1">R</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                    {% if ACCOUNT_SETTINGS.0 == 1 %}
+                                        <div class="tab-pane fade active show" id="G" role="tabpanel">
+                                            <p>
+                                                <strong>General Audiences:</strong><br>
+                                                All films that are recommended, searchable, and watchable are rated G by the MPA, and are thus
+                                                suitable for all ages.
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane fade" id="G" role="tabpanel">
+                                            <p>
+                                                <strong>General Audiences:</strong><br>
+                                                All films that are recommended, searchable, and watchable are rated G by the MPA, and are thus
+                                                suitable for all ages.
+                                            </p>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 2 %}
+                                        <div class="tab-pane fade active show" id="PG" role="tabpanel">
+                                            <p>
+                                                <strong>Parental Guidance Suggested:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material not suitable for children.
+                                                Parents urged to give "parental guidance".
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane fade" id="PG" role="tabpanel">
+                                            <p>
+                                                <strong>Parental Guidance Suggested:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material not suitable for children.
+                                                Parents urged to give "parental guidance".
+                                            </p>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 3 %}
+                                        <div class="tab-pane fade active show" id="PG-13" role="tabpanel">
+                                            <p>
+                                                <strong>Parents Strongly Cautioned:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material inappropriate for children under 13.
+                                                Parents are urged to be cautious.
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane fade" id="PG-13" role="tabpanel">
+                                            <p>
+                                                <strong>Parents Strongly Cautioned:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material inappropriate for children under 13.
+                                                Parents are urged to be cautious.
+                                            </p>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if ACCOUNT_SETTINGS.0 == 4 %}
+                                        <div class="tab-pane fade active show" id="R" role="tabpanel">
+                                            <p>
+                                                <strong>Restricted:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material inappropriate for non-adults.
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane fade" id="R" role="tabpanel">
+                                            <p>
+                                                <strong>Restricted:</strong><br>
+                                                Some films that are recommended, searchable, and watchable may contain material inappropriate for non-adults.
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            
+            </div>
+            
+            <script>
+                // Get the modal
+                var modal = document.getElementById("user_modal");
+                
+                // Get the button that opens the modal
+                var btn = document.getElementById("user_button");
+                
+                // When the user clicks the button, open the modal 
+                btn.onclick = function() {
+                    if(btn.href == "javascript:;"){
+                        modal.style.display = "block";
+                    }
+                }
+                
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+            </script>        
+        </div>
+
+        {% comment %} <div>
             <br><br><br>
             <textarea name="ta" id="results" cols="150" rows="30">
 
@@ -90,7 +296,7 @@
                     ))
                 }
             </script>
-        </div>
+        </div> {% endcomment %}
 
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
