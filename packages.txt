@@ -1,6 +1,7 @@
 Django
 psycopg2
 channels
+daphne
 
 django-crispy-forms
 crispy-bootstrap5
