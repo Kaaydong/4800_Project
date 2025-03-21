@@ -13,6 +13,12 @@
         <link rel="icon" type="image/x-icon" href="{% static "assets/favicon.ico" %}" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" />
+
+        <!-- reference/link to styles.css for movie card styling -KD -->
+        <title>Movie Card</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'video_site/styles.css' %}">
+
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -267,14 +273,64 @@
             </script>        
         </div>
 
-
         <div>
-
-            {% comment %} KEON HERE HERE HERE {% endcomment %}
-            
-
+            <div class="movie-section">
+                <h2 class="section-title">Trending</h2>
+                <div class="movie-row">
+                    <div class="movie-card">
+                        <!-- Replace with <img class="movie-thumbnail" src="<%= movieCard.getPosterUrl() %>" alt="Thumbnail"> -->
+                        <img class="movie-thumbnail" src="https://www.theworldtheatre.org/wp-content/uploads/2020/07/shrek-poster.jpg" alt="Movie Thumbnail">
+                        <div class="movie-info">
+                            <!-- Replace with <div class="movie-title"><%= movieCard.getTitle() %></div> -->
+                            <div class="movie-title">Shrek</div>
+                            <div class="movie-details">
+                                <div class="movie-info-line">
+                                    <!-- Replace with
+                                 <span><%= movieCard.getReleaseYear() %></span> |
+                                 <span><%= movieCard.getAgeRestriction() %></span> |
+                                 <span><%= movieCard.getDuration() %></span>
+                                 -->
+                                    <span>2001</span> | <span>PG</span> | <span>90 min</span>
+                                </div>
+                                <!-- Replace with <span><%= movieCard.getGenres() %></span> -->
+                                <div class="movie-genres">
+                                    <!-- Replace with <span><%= movieCard.getGenres() %></span> -->
+                                    <span>Adventure, Comedy, Family</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-section">
+                <h2 class="section-title">Top 10</h2>
+                <div class="movie-row">
+                    <div class="movie-card">
+                        <img class="movie-thumbnail" src="https://www.theworldtheatre.org/wp-content/uploads/2020/07/shrek-poster.jpg" alt="Movie Thumbnail">
+                        <div class="movie-info">
+                            <div class="movie-title">Movie Title</div>
+                            <div class="movie-details">
+                                <span>2024</span> | <span>PG-13</span> | <span>Action, Thriller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-section">
+                <h2 class="section-title">For Kids</h2>
+                <div class="movie-row">
+                    <div class="movie-card">
+                        <img class="movie-thumbnail" src="https://www.theworldtheatre.org/wp-content/uploads/2020/07/shrek-poster.jpg" alt="Movie Thumbnail">
+                        <div class="movie-info">
+                            <div class="movie-title">Movie Title</div>
+                            <div class="movie-details">
+                                <span>2024</span> | <span>PG-13</span> | <span>Action, Thriller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
 
 
         {% comment %} <div>
