@@ -21,8 +21,18 @@ def landing_page(request):
         account_links = ["users/login", "users/register"]
         account_settings = [1]
 
-    return render(request, 'video_site/landing_page.html', 
-                  {'ACCOUNT_INFO': account_info, 'ACCOUNT_LINKS': account_links, 'ACCOUNT_SETTINGS': account_settings})
+    # Filter movies with an age restriction of 12 or under
+    ForKids_movies = data.Movie.objects.filter(age_restriction__lte=12)
+    for movie in ForKids_movies:
+        movie.duration_minutes = movie.duration_seconds // 60
+    # Convert the QuerySet into a list of movie objects
+    movies_list = [copy.deepcopy(movie) for movie in ForKids_movies]
+
+    return render(request, 'video_site/landing_page.html',
+                  {'ACCOUNT_INFO': account_info,
+                   'ACCOUNT_LINKS': account_links,
+                   'ACCOUNT_SETTINGS': account_settings,
+                   'movies': ForKids_movies})
 
 
 def bookmarks_page(request):

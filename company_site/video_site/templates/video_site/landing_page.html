@@ -334,38 +334,24 @@
             <div class="movie-section">
                 <h2 class="section-title">For Kids</h2>
                 <div class="movie-row">
-                    <div class="movie-card">
-                        <!-- Replace with <img class="movie-thumbnail" src="<%= movieCard.getPosterUrl() %>" alt="Thumbnail"> -->
-                        <img class="movie-thumbnail" src="https://www.theworldtheatre.org/wp-content/uploads/2020/07/shrek-poster.jpg" alt="Movie Thumbnail">
+                    {% for movie in movies %}
+                    <div class="movie-card" data-movie-id="{{ movie.movie_id }}">
+                        <img class="movie-thumbnail" src="{{ movie.poster_url }}" alt="Movie Thumbnail">
                         <div class="movie-info">
-                            <!-- Replace with <div class="movie-title"><%= movieCard.getTitle() %></div> -->
-                            <div class="movie-title">Shrek</div>
+                            <div class="movie-title">{{ movie.title }}</div>
                             <div class="movie-details">
                                 <div class="movie-info-line">
-                                    <!-- Replace with
-                                 <span><%= movieCard.getReleaseYear() %></span> |
-                                 <span><%= movieCard.getAgeRestriction() %></span> |
-                                 <span><%= movieCard.getDuration() %></span>
-                                 -->
-                                    <span>2001</span> | <span>PG</span> | <span>90 min</span>
+                                    <span>{{ movie.release_date.year }}</span> |
+                                    <span>{{ movie.age_restriction }}</span> |
+                                    <span>{{ movie.duration_minutes }} min</span>
                                 </div>
-                                <!-- Replace with <span><%= movieCard.getGenres() %></span> -->
                                 <div class="movie-genres">
-                                    <!-- Replace with <span><%= movieCard.getGenres() %></span> -->
-                                    <span>Adventure, Comedy, Family</span>
+                                    <span>Adventure, Comedy, Family</span> <!-- If genres are stored, replace this -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://upload.wikimedia.org/wikipedia/en/2/29/Finding_Nemo.jpg" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Finding Nemo</div>
-                            <div class="movie-details">
-                                <span>2003</span> | <span>G</span> | <span>Family, Adventure</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
