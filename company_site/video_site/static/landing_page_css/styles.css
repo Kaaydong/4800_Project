@@ -22,7 +22,7 @@ body {
 
 .movie-section {
     margin: 50px auto;
-    width: 80%;
+    width: 92%;
     padding: 20px 0;
 }
 
@@ -37,12 +37,47 @@ body {
     border-radius: 5px;
 }
 
+.movie-container {
+    position: relative;       /* Ensures buttons are positioned over movies */
+    max-width: 200vw;         /* Adjust to reduce empty margins */
+    margin: auto;            /* Centers container */
+}
+
 .movie-row {
     display: flex;
-    flex-wrap: wrap; /* Allows multiple rows */
+    overflow-x: auto;
     gap: 20px; /* Adds spacing between the cards */
-    justify-content: center; /* Centers cards in the row */
+    scrollbar-width: none; /* Hide scrollbar */
+    scroll-behavior: smooth; /* Enable smooth scrolling */
+    padding-bottom: 10px;
     margin-top: 20px;
+
+    position: relative;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 80px;
+    height: 300px;
+    display: none; /* Initially hidden */
+    z-index: 10;
+}
+
+.movie-row:hover .scroll-btn {
+    display: block;
+}
+
+.scroll-btn.left {
+    left: 1px;
+}
+.scroll-btn.right {
+    right: 1px;
 }
 
 .movie-card {
@@ -54,6 +89,7 @@ body {
     border-radius: 10px;
     width: 250px;
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds shadow to the card */
@@ -62,12 +98,12 @@ body {
 .movie-card:hover {
     transform: scale(1.2); /* Expands the card when hovered over */
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-    z-index: 10; /* Make sure the card stays on top of others when hovered */
+    z-index: 8; /* Make sure the card stays on top of others when hovered */
 }
 
 .movie-thumbnail {
     width: 100%;
-    height: auto;
+    height: 340px;
     border-radius: 5px;
 }
 
