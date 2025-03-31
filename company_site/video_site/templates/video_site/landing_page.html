@@ -353,22 +353,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="movie-card" data-movie-id="{{ movie.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie.release_date.year }}</span> |
-                                        <span>{{ movie.age_restriction }}</span> |
-                                        <span>{{ movie.duration_minutes }} min</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>Adventure, Comedy, Family</span> <!-- If genres are stored, replace this -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         {% endfor %}
                     </div>
                     <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
