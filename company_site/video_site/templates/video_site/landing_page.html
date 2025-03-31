@@ -334,8 +334,8 @@
             <div class="movie-section">
                 <h2 class="section-title">For Kids</h2>
                 <div class="movie-container">
+                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
                     <div class="movie-row">
-                        <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
                         {% for movie in movies %}
                         <div class="movie-card" data-movie-id="{{ movie.movie_id }}">
                             <img class="movie-thumbnail" src="{{ movie.poster_url }}" alt="Movie Thumbnail">
@@ -354,8 +354,8 @@
                             </div>
                         </div>
                         {% endfor %}
-                        <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
                     </div>
+                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
                 </div>
             </div>
         </div>
@@ -395,9 +395,16 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-        function scrollMovies(button, direction) {
-            // Find the parent movie row of the clicked button
-            const movieRow = button.closest('.movie-row');
+       function scrollMovies(button, direction) {
+            // Find the closest movie-container and get the associated movie row
+            const movieContainer = button.closest('.movie-container');
+            const movieRow = movieContainer.querySelector('.movie-row'); // Find the first movie-row inside the container
+
+            // Check if movieRow is null (in case the querySelector() doesn't find the element)
+            if (!movieRow) {
+                console.error('Movie row not found inside movie container');
+                return;
+            }
 
             // Get the necessary scroll properties
             const scrollAmount = 300; // How far the row should scroll per click
@@ -428,8 +435,9 @@
                 }
             }
         }
+
         // Ensures the script runs after the DOM content is loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Any additional JS if needed after page load
         });
         </script>

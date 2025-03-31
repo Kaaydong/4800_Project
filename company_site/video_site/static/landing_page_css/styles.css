@@ -69,8 +69,8 @@ body {
     z-index: 10;
 }
 
-.movie-row:hover .scroll-btn {
-    display: block;
+.movie-container:hover .scroll-btn {
+    display: block; /* Show the buttons when the parent container is hovered */
 }
 
 .scroll-btn.left {
