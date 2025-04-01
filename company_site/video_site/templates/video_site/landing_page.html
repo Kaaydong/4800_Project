@@ -259,96 +259,23 @@
 
         <div>
             <div class="movie-section">
-                <h2 class="section-title">Trending</h2>
-                <div class="movie-row">
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://upload.wikimedia.org/wikipedia/en/4/49/Rush_Hour_poster.png" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Rush Hour</div>
-                            <div class="movie-details">
-                                <span>1998</span> | <span>PG-13</span> | <span>Action, Comedy</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWNlLWE0NjItMDJlYTRlNGJiZjcyXkEyXkFqcGc@._V1_.jpg" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Avatar</div>
-                            <div class="movie-details">
-                                <span>2009</span> | <span>PG-13</span> | <span>Sci-Fi, Action</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRTF9jzyrWUi_G9BslErWZBlzb6lVB_QUZxjLyYje1KhlpZZPFUb8brTxzyIsOv58CFdqBe" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Sword Art Online The Movie: Ordinal Scale</div>
-                            <div class="movie-details">
-                                <span>2017</span> | <span>PG-13</span> | <span>Action, Adventure</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Iron Man</div>
-                            <div class="movie-details">
-                                <span>2008</span> | <span>PG-13</span> | <span>Action, Sci-Fi</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://upload.wikimedia.org/wikipedia/en/6/6c/HLposterUSA2.jpg" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">The Hurt Locker</div>
-                            <div class="movie-details">
-                                <span>2008</span> | <span>R</span> | <span>Action, Thriller</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="movie-section">
-                <h2 class="section-title">Top 10</h2>
-                <div class="movie-row">
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://upload.wikimedia.org/wikipedia/en/7/7f/Suzume_no_Tojimari_poster.jpg" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">Suzume</div>
-                            <div class="movie-details">
-                                <span>2022</span> | <span>PG-13</span> | <span>Adventure, Romance</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie-card">
-                        <img class="movie-thumbnail" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQluFl3GfQDXohBaH-xG3GuRi8T4MDIQPRpCqUGLiE5tXdXbUO0hRFwnshvzg07igEgGg7i" alt="Movie Thumbnail">
-                        <div class="movie-info">
-                            <div class="movie-title">The Avengers</div>
-                            <div class="movie-details">
-                                <span>2012</span> | <span>PG-13</span> | <span>Action, Adventure</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="movie-section">
-                <h2 class="section-title">For Kids</h2>
+                <h2 class="section-title">Trending Today</h2>
                 <div class="movie-container">
                     <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
                     <div class="movie-row">
-                        {% for movie in movies %}
-                        <div class="movie-card" data-movie-id="{{ movie.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.poster_url }}" alt="Movie Thumbnail">
+                        {% for movie in TRENDING_DAILY %}
+                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
                             <div class="movie-info">
-                                <div class="movie-title">{{ movie.title }}</div>
+                                <div class="movie-title">{{ movie.0.title }}</div>
                                 <div class="movie-details">
                                     <div class="movie-info-line">
-                                        <span>{{ movie.release_date.year }}</span> |
-                                        <span>{{ movie.age_restriction }}</span> |
-                                        <span>{{ movie.duration_minutes }} min</span>
+                                        <span>{{ movie.0.release_date.year }}</span>
+                                        <span>{{ movie.1 }}</span>
+                                        <span>{{ movie.2 }}</span>
                                     </div>
                                     <div class="movie-genres">
-                                        <span>Adventure, Comedy, Family</span> <!-- If genres are stored, replace this -->
+                                        <span>{{ movie.3 }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -358,6 +285,119 @@
                     <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
                 </div>
             </div>
+
+            <div class="movie-section">
+                <h2 class="section-title">Popular This Month</h2>
+                <div class="movie-container">
+                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
+                    <div class="movie-row">
+                        {% for movie in TRENDING_MONTHLY %}
+                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
+                            <div class="movie-info">
+                                <div class="movie-title">{{ movie.0.title }}</div>
+                                <div class="movie-details">
+                                    <div class="movie-info-line">
+                                        <span>{{ movie.0.release_date.year }}</span>
+                                        <span>{{ movie.1 }}</span>
+                                        <span>{{ movie.2 }}</span>
+                                    </div>
+                                    <div class="movie-genres">
+                                        <span>{{ movie.3 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="movie-section">
+                <h2 class="section-title">Random Movies</h2>
+                <div class="movie-container">
+                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
+                    <div class="movie-row">
+                        {% for movie in RANDOM_MOVIES %}
+                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
+                            <div class="movie-info">
+                                <div class="movie-title">{{ movie.0.title }}</div>
+                                <div class="movie-details">
+                                    <div class="movie-info-line">
+                                        <span>{{ movie.0.release_date.year }}</span>
+                                        <span>{{ movie.1 }}</span>
+                                        <span>{{ movie.2 }}</span>
+                                    </div>
+                                    <div class="movie-genres">
+                                        <span>{{ movie.3 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="movie-section">
+                <h2 class="section-title">For Kids</h2>
+                <div class="movie-container">
+                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
+                    <div class="movie-row">
+                        {% for movie in KIDS_MOVIES %}
+                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
+                            <div class="movie-info">
+                                <div class="movie-title">{{ movie.0.title }}</div>
+                                <div class="movie-details">
+                                    <div class="movie-info-line">
+                                        <span>{{ movie.0.release_date.year }}</span>
+                                        <span>{{ movie.1 }}</span>
+                                        <span>{{ movie.2 }}</span>
+                                    </div>
+                                    <div class="movie-genres">
+                                        <span>{{ movie.3 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="movie-section">
+                <h2 class="section-title">For Teens</h2>
+                <div class="movie-container">
+                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
+                    <div class="movie-row">
+                        {% for movie in TEEN_MOVIES %}
+                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
+                            <div class="movie-info">
+                                <div class="movie-title">{{ movie.0.title }}</div>
+                                <div class="movie-details">
+                                    <div class="movie-info-line">
+                                        <span>{{ movie.0.release_date.year }}</span>
+                                        <span>{{ movie.1 }}</span>
+                                        <span>{{ movie.2 }}</span>
+                                    </div>
+                                    <div class="movie-genres">
+                                        <span>{{ movie.3 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
+                </div>
+            </div>
+
         </div>
 
 

@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.contrib.auth import logout, get_user_model
 from django.shortcuts import redirect
 from user_forms import models
+
 from . import models as data
+from .classes import MovieListing as ML
 
 # Create your views here.
 def landing_page(request):
@@ -22,17 +24,18 @@ def landing_page(request):
         account_settings = [1]
 
     # Filter movies with an age restriction of 12 or under
-    ForKids_movies = data.Movie.objects.filter(age_restriction__lte=12)
-    for movie in ForKids_movies:
-        movie.duration_minutes = movie.duration_seconds // 60
-    # Convert the QuerySet into a list of movie objects
-    movies_list = [copy.deepcopy(movie) for movie in ForKids_movies]
+    ForKids_movies = data.Movie.objects.filter(age_restriction__lte=2)
 
     return render(request, 'video_site/landing_page.html',
                   {'ACCOUNT_INFO': account_info,
                    'ACCOUNT_LINKS': account_links,
                    'ACCOUNT_SETTINGS': account_settings,
-                   'movies': ForKids_movies})
+                   'TRENDING_DAILY': ML.MovieListing.getTopDaily(),
+                   'TRENDING_MONTHLY': ML.MovieListing.getTopMonthly(),
+                   'RANDOM_MOVIES': ML.MovieListing.getRandomMovies(),
+                   'KIDS_MOVIES': ML.MovieListing.getMoviesForKids(),
+                   'TEEN_MOVIES': ML.MovieListing.getMoviesForTeens(),
+                   })
 
 
 def bookmarks_page(request):

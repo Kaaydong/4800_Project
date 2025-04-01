@@ -29,6 +29,9 @@ class MovieStatistics(models.Model):
     views_monthly = models.IntegerField(default=0)
     views_annually = models.IntegerField(default=0)
 
+    def __str__(self):
+        return str(self.movie_key) + " | Stats"
+
 
 class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
