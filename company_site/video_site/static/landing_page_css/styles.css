@@ -21,9 +21,11 @@ body {
 }
 
 .movie-section {
-    margin: 50px auto;
+    margin: 20px auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
     width: 92%;
-    padding: 20px 0;
+    padding: 0px 0;
 }
 
 .section-title {
@@ -33,7 +35,7 @@ body {
     font-weight: bold;
     text-align: center;
     padding: 10px;
-    margin: 0;
+    margin: 2px;
     border-radius: 5px;
 }
 
@@ -41,30 +43,36 @@ body {
     position: relative;       /* Ensures buttons are positioned over movies */
     max-width: 200vw;         /* Adjust to reduce empty margins */
     margin: auto;            /* Centers container */
+    overflow: visible;
+
 }
 
 .movie-row {
     display: flex;
-    overflow-x: auto;
+    overflow-x: scroll;
+    overflow-y: visible;
     gap: 20px; /* Adds spacing between the cards */
     scrollbar-width: none; /* Hide scrollbar */
     scroll-behavior: smooth; /* Enable smooth scrolling */
-    padding-bottom: 10px;
-    margin-top: 20px;
-
+    padding-top: 35px; /* Reduce this if there is too much space between section title
+    and movie-card but reduce too much and movie-card will be hidden behind top and bottom margins*/
+    padding-bottom: 60px;
+    z-index: 2;
     position: relative;
+    height: 500px;
+    border: 0px solid red;
 }
 
 .scroll-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-60%);
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     cursor: pointer;
     width: 80px;
-    height: 300px;
+    height: 344px;
     display: none; /* Initially hidden */
     z-index: 10;
 }
@@ -87,18 +95,66 @@ body {
     background-color: #1e1e1e;
     padding: 10px;
     border-radius: 10px;
-    width: 250px;
+    width: 13%; /* Adjust width to fit approximately 7.5 cards per row */
+    aspect-ratio: 2/3;
+
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 0 calc(100% / 7.5 - 20px); /* 7.5 movie cards per row */
     flex-direction: column;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds shadow to the card */
 }
 
+
+/* This media stuff might be unnecessary */
+@media (max-width: 1200px) {
+    .movie-card {
+        width: 18%;  /* Adjust for smaller screens (approx. 5-6 cards per row) */
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-card {
+        width: 40%;  /* Adjust for smaller screens (approx. 3-4 cards per row) */
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card {
+        width: 90%;  /* Adjust for mobile devices (1 card per row) */
+    }
+}
 .movie-card:hover {
+    height: 420px;
     transform: scale(1.2); /* Expands the card when hovered over */
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-    z-index: 8; /* Make sure the card stays on top of others when hovered */
+    z-index: 9; /* Make sure the card stays on top of others when hovered */
+}
+.movie-card:hover .movie-info {
+    display: block; /* Show movie details on hover */
+}
+
+.bookmark-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Smooth transition for visibility */
+}
+.movie-card:hover .bookmark-btn {
+    opacity: 1; /* Make the button visible */
+    visibility: visible; /* Ensure the button is visible */
+    transition: opacity 0.3s ease, visibility 0s; /* Smooth transition for visibility */
+}
+.bookmark-btn:hover {
+    color: gold;  /* Add hover effect (e.g., change color to gold on hover) */
 }
 
 .movie-thumbnail {
@@ -108,8 +164,11 @@ body {
 }
 
 .movie-info {
+    position: relative;
+    display: none;
     margin-top: 10px;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth expand */
 }
 
 .movie-title {

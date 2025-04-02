@@ -19,6 +19,8 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'landing_page_css/styles.css' %}">
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -266,6 +268,9 @@
                     <div class="movie-row">
                         {% for movie_data in movie_category.1 %}
                         <div class="movie-card" data-movie-id="{{ movie_data.0.movie_id }}">
+                            <button class="bookmark-btn">
+                                <i class="fa-regular fa-bookmark"></i> <!-- Font Awesome star icon -->
+                            </button>
                             <img class="movie-thumbnail" src="{{ movie_data.0.poster_url }}" alt="Movie Thumbnail">
                             <div class="movie-info">
                                 <div class="movie-title">{{ movie_data.0.title }}</div>
