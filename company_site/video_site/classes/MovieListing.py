@@ -1,11 +1,18 @@
 import random
+from django.contrib.auth import get_user_model
+
 from .. import models as data
 
+
 class MovieListing():
+    age_restriction = 0
+
+    def __init__(self, age_restriction=4):
+        self.age_restriction = age_restriction
 
     # returns a movie as a tuple, with all of its required data
     # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted]
-    def generateMovieCardInfo(movie):
+    def __generateMovieCardInfo(self, movie):
         duration = movie.duration_seconds
         restriction = movie.age_restriction
         genres = data.MovieGenreEntry.objects.filter(movie_key=movie.movie_id)
@@ -39,78 +46,107 @@ class MovieListing():
                 genres_formatted += ", " 
 
         return [movie, restriction_formatted, duration_formatted, genres_formatted]
+    
+
+    # get 20 movies recommended to the user
+    def getUserRecommended(self, user_id):
+        watched_movies = data.WatchEntry.objects.filter(user_key=user_id, movie_key__age_restriction__lte=self.age_restriction)
+
+        # get a list of all genres
+        all_genres = data.Genre.objects.all()
+        genre_list = []
+        for genre in all_genres:
+            genre_list.append([genre, 0])
+
+        # count how many movies of each genre the user watched
+        for movie in watched_movies:
+            movie_genres = data.MovieGenreEntry.objects.filter(movie_key=movie.movie_key.movie_id)
+
+            for i in range(0, len(genre_list)):
+                for g in movie_genres:
+                    if genre_list[i][0].genre == g.genre_key.genre:
+                        genre_list[i][1] += 1
+                        break
+
+        # Sort genre_list from highest to lowest based on genre watch quantity
+        genre_list.sort(key=lambda x: x[1], reverse=True)
+
+        # Get movies, with most watched genres prioritized
+        id_list = []
+        return_list = []
+        for g in genre_list:
+            movies = data.MovieGenreEntry.objects.filter(genre_key=g[0].genre_id, movie_key__age_restriction__lte=self.age_restriction)
+            for m in movies:
+                if not m.movie_key.movie_id in id_list:
+                    id_list.append(m.movie_key.movie_id)
+                    return_list.append(self.__generateMovieCardInfo(m.movie_key))
+
+                if len(return_list) == 20:
+                    break
+            
+            if len(return_list) == 20:
+                    break
+            
+        random.shuffle(return_list)
+
+        return ["Recommended For You", return_list]
+        
+
+    # Queries for every movie's stats and turns it into a list
+    def __generateStatisticsList(self):
+        movie_stats = data.MovieStatistics.objects.all()
+        movie_stat_list = []
+        for stat in movie_stats:
+            movie_stat_list.append(stat)
+
+        return movie_stat_list
+    
+
+    # Take a sorted statistics list and return 10 movies in the proper format
+    def __convertStatsMovieListToReturnList(self, movie_stat_list):
+        movie_stat_list = movie_stat_list[:10]
+
+        returned_list = []
+        for stat in movie_stat_list:
+            returned_list.append(self.__generateMovieCardInfo(stat.movie_key))
+        
+        return returned_list
+
 
     # get top 10 daily movies
-    @staticmethod
-    def getTopDaily():
-        movie_stats = data.MovieStatistics.objects.all()
-        movie_stat_list = []
-        for stat in movie_stats:
-            movie_stat_list.append(stat)
-
+    def getTopDaily(self):
+        movie_stat_list = self.__generateStatisticsList()
         movie_stat_list.sort(key=lambda x: x.views_daily, reverse=True)
-        movie_stat_list = movie_stat_list[:10]
 
-        returned_list = []
-        for stat in movie_stat_list:
-            returned_list.append(MovieListing.generateMovieCardInfo(stat.movie_key))
-
-        return returned_list
+        return ["Trending Today", self.__convertStatsMovieListToReturnList(movie_stat_list)]
     
+
     # get top 10 weekly movies
-    @staticmethod
-    def getTopWeekly():
-        movie_stats = data.MovieStatistics.objects.all()
-        movie_stat_list = []
-        for stat in movie_stats:
-            movie_stat_list.append(stat)
+    def getTopWeekly(self):
+        movie_stat_list = self.__generateStatisticsList()
+        movie_stat_list.sort(key=lambda x: x.views_weekly, reverse=True)
 
-        movie_stat_list.sort(key=lambda x: x.views_daily, reverse=True)
-        movie_stat_list = movie_stat_list[:10]
-
-        returned_list = []
-        for stat in movie_stat_list:
-            returned_list.append(MovieListing.generateMovieCardInfo(stat.movie_key))
-
-        return returned_list
+        return ["Hits This Week", self.__convertStatsMovieListToReturnList(movie_stat_list)]
     
+
     # get top 10 monthly movies
-    @staticmethod
-    def getTopMonthly():
-        movie_stats = data.MovieStatistics.objects.all()
-        movie_stat_list = []
-        for stat in movie_stats:
-            movie_stat_list.append(stat)
+    def getTopMonthly(self):
+        movie_stat_list = self.__generateStatisticsList()
+        movie_stat_list.sort(key=lambda x: x.views_monthly, reverse=True)
 
-        movie_stat_list.sort(key=lambda x: x.views_daily, reverse=True)
-        movie_stat_list = movie_stat_list[:10]
+        return ["Popular This Month", self.__convertStatsMovieListToReturnList(movie_stat_list)]
 
-        returned_list = []
-        for stat in movie_stat_list:
-            returned_list.append(MovieListing.generateMovieCardInfo(stat.movie_key))
-
-        return returned_list
 
     # get top 10 annual movies
-    @staticmethod
-    def getTopAnnually():
-        movie_stats = data.MovieStatistics.objects.all()
-        movie_stat_list = []
-        for stat in movie_stats:
-            movie_stat_list.append(stat)
+    def getTopAnnually(self):
+        movie_stat_list = self.__generateStatisticsList()
+        movie_stat_list.sort(key=lambda x: x.views_annually, reverse=True)
 
-        movie_stat_list.sort(key=lambda x: x.views_daily, reverse=True)
-        movie_stat_list = movie_stat_list[:10]
-
-        returned_list = []
-        for stat in movie_stat_list:
-            returned_list.append(MovieListing.generateMovieCardInfo(stat.movie_key))
-
-        return returned_list
+        return ["Big This Year", self.__convertStatsMovieListToReturnList(movie_stat_list)]
     
+
     # take a list of movies and randomize it into a list of 20 elements
-    @staticmethod
-    def randomizeMovies(movies):
+    def __randomizeMovies(self, movies):
         movie_list = []
         for movie in movies:
             movie_list.append(movie)
@@ -120,43 +156,43 @@ class MovieListing():
 
         returned_list = []
         for movie in movie_list:
-            returned_list.append(MovieListing.generateMovieCardInfo(movie))
+            returned_list.append(self.__generateMovieCardInfo(movie))
 
         return returned_list
     
-    # get random list of 20 movies
-    @staticmethod
-    def getRandomMovies():
-        movies = data.Movie.objects.all()
 
-        return MovieListing.randomizeMovies(movies)
+    # get random list of 20 movies
+    def getRandomMovies(self):
+        movies = data.Movie.objects.filter(age_restriction__lte=self.age_restriction)
+
+        return ["Movies We Recommend", self.__randomizeMovies(movies)]
     
+
     # get 20 movies restricted by a certain age rating
-    @staticmethod
-    def getMoviesRestrictedByAge(age_restriction):
-        movies = data.Movie.objects.filter(age_restriction__lte=age_restriction)
+    def __getMoviesRestrictedByAge(self, age_restriction):
+        movies = data.Movie.objects.filter(age_restriction__lte=age_restriction) # YES THIS QUERY IS CORRECT 
             
-        return MovieListing.randomizeMovies(movies)
+        return self.__randomizeMovies(movies)
     
+
     # get 20 movies of a certain age rating
-    @staticmethod
-    def getMoviesByAgeRestriction(age_restriction):
-        movies = data.Movie.objects.filter(age_restriction__exact=age_restriction)
+    def __getMoviesByAgeRestriction(self, age_restriction):
+        movies = data.Movie.objects.filter(age_restriction__exact=age_restriction) # YES THIS QUERY IS ALSO CORRECT 
             
-        return MovieListing.randomizeMovies(movies)
+        return self.__randomizeMovies(movies)
     
+
     # get 20 movies rated G or PG
-    @staticmethod
-    def getMoviesForKids():
-        return MovieListing.getMoviesRestrictedByAge(2)
+    def getMoviesForKids(self):
+        return ["For Kids", self.__getMoviesRestrictedByAge(2)]
     
+
     # get 20 movies rated PG-13
-    @staticmethod
-    def getMoviesForTeens():
-        return MovieListing.getMoviesByAgeRestriction(3)
+    def getMoviesForTeens(self):
+        return ["For Teens", self.__getMoviesByAgeRestriction(3)]
     
+
     # get 20 movies rated R
-    @staticmethod
-    def getMoviesForAdults():
-        return MovieListing.getMoviesByAgeRestriction(4)
+    def getMoviesForAdults(self):
+        return ["For Adults", self.__getMoviesByAgeRestriction(4)]
 

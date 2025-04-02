@@ -1,6 +1,6 @@
 import copy
 from django.shortcuts import render
-from django.contrib.auth import logout, get_user_model
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from user_forms import models
 
@@ -12,29 +12,43 @@ def landing_page(request):
     if request.user.is_authenticated:
         user = get_user_model().objects.get(id=request.user.id)
         user_settings = models.Settings.objects.get(user_key=user)
+        user_settings = models.Settings.objects.get(user_key=user)        
 
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
         account_links = ["javascript:;", "users/logout"]
         account_settings = [user_settings.max_age_restriction]
+
+        # Generate Movie Lists with User Preferences
+        ml = ML.MovieListing(user_settings.max_age_restriction)
+
+        generated_movie_lists = [] # Format = ['name', movie_data]
+        generated_movie_lists.append(ml.getUserRecommended(request.user.id))
+
     else:
         # Render info if Guest Account is being used
         account_info = ["Guest", "Login", "Register"]
         account_links = ["users/login", "users/register"]
         account_settings = [1]
 
-    # Filter movies with an age restriction of 12 or under
-    ForKids_movies = data.Movie.objects.filter(age_restriction__lte=2)
+        # Generate Movie Lists without User Preferences
+        ml = ML.MovieListing()
+
+        generated_movie_lists = [] # Format = ['name', movie_data]
+        generated_movie_lists.append(ml.getRandomMovies())
+
+    # Add more categories
+    generated_movie_lists.append(ml.getTopDaily())
+    generated_movie_lists.append(ml.getTopWeekly())
+    generated_movie_lists.append(ml.getTopAnnually())
+    generated_movie_lists.append(ml.getMoviesForKids())
+    generated_movie_lists.append(ml.getMoviesForTeens())
 
     return render(request, 'video_site/landing_page.html',
                   {'ACCOUNT_INFO': account_info,
                    'ACCOUNT_LINKS': account_links,
                    'ACCOUNT_SETTINGS': account_settings,
-                   'TRENDING_DAILY': ML.MovieListing.getTopDaily(),
-                   'TRENDING_MONTHLY': ML.MovieListing.getTopMonthly(),
-                   'RANDOM_MOVIES': ML.MovieListing.getRandomMovies(),
-                   'KIDS_MOVIES': ML.MovieListing.getMoviesForKids(),
-                   'TEEN_MOVIES': ML.MovieListing.getMoviesForTeens(),
+                   'MOVIE_LIST': generated_movie_lists,
                    })
 
 

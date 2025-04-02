@@ -258,24 +258,25 @@
         </div>
 
         <div>
+            {% for movie_category in MOVIE_LIST %}
             <div class="movie-section">
-                <h2 class="section-title">Trending Today</h2>
+                <h2 class="section-title">{{ movie_category.0 }}</h2>
                 <div class="movie-container">
                     <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
                     <div class="movie-row">
-                        {% for movie in TRENDING_DAILY %}
-                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
+                        {% for movie_data in movie_category.1 %}
+                        <div class="movie-card" data-movie-id="{{ movie_data.0.movie_id }}">
+                            <img class="movie-thumbnail" src="{{ movie_data.0.poster_url }}" alt="Movie Thumbnail">
                             <div class="movie-info">
-                                <div class="movie-title">{{ movie.0.title }}</div>
+                                <div class="movie-title">{{ movie_data.0.title }}</div>
                                 <div class="movie-details">
                                     <div class="movie-info-line">
-                                        <span>{{ movie.0.release_date.year }}</span>
-                                        <span>{{ movie.1 }}</span>
-                                        <span>{{ movie.2 }}</span>
+                                        <span>{{ movie_data.0.release_date.year }}</span>
+                                        <span>{{ movie_data.1 }}</span>
+                                        <span>{{ movie_data.2 }}</span>
                                     </div>
                                     <div class="movie-genres">
-                                        <span>{{ movie.3 }}</span>
+                                        <span>{{ movie_data.3 }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -285,119 +286,7 @@
                     <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
                 </div>
             </div>
-
-            <div class="movie-section">
-                <h2 class="section-title">Popular This Month</h2>
-                <div class="movie-container">
-                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
-                    <div class="movie-row">
-                        {% for movie in TRENDING_MONTHLY %}
-                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie.0.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie.0.release_date.year }}</span>
-                                        <span>{{ movie.1 }}</span>
-                                        <span>{{ movie.2 }}</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>{{ movie.3 }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="movie-section">
-                <h2 class="section-title">Random Movies</h2>
-                <div class="movie-container">
-                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
-                    <div class="movie-row">
-                        {% for movie in RANDOM_MOVIES %}
-                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie.0.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie.0.release_date.year }}</span>
-                                        <span>{{ movie.1 }}</span>
-                                        <span>{{ movie.2 }}</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>{{ movie.3 }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="movie-section">
-                <h2 class="section-title">For Kids</h2>
-                <div class="movie-container">
-                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
-                    <div class="movie-row">
-                        {% for movie in KIDS_MOVIES %}
-                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie.0.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie.0.release_date.year }}</span>
-                                        <span>{{ movie.1 }}</span>
-                                        <span>{{ movie.2 }}</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>{{ movie.3 }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="movie-section">
-                <h2 class="section-title">For Teens</h2>
-                <div class="movie-container">
-                    <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
-                    <div class="movie-row">
-                        {% for movie in TEEN_MOVIES %}
-                        <div class="movie-card" data-movie-id="{{ movie.0.movie_id }}">
-                            <img class="movie-thumbnail" src="{{ movie.0.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie.0.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie.0.release_date.year }}</span>
-                                        <span>{{ movie.1 }}</span>
-                                        <span>{{ movie.2 }}</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>{{ movie.3 }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>
-                </div>
-            </div>
-
+            {% endfor %}
         </div>
 
 
