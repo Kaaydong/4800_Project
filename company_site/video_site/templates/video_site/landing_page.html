@@ -267,25 +267,27 @@
                     <button class="scroll-btn left" onclick="scrollMovies(this, -1)">&#10094;</button>
                     <div class="movie-row">
                         {% for movie_data in movie_category.1 %}
-                        <div class="movie-card" data-movie-id="{{ movie_data.0.movie_id }}">
-                            <button class="bookmark-btn">
-                                <i class="fa-regular fa-bookmark"></i> <!-- Font Awesome star icon -->
-                            </button>
-                            <img class="movie-thumbnail" src="{{ movie_data.0.poster_url }}" alt="Movie Thumbnail">
-                            <div class="movie-info">
-                                <div class="movie-title">{{ movie_data.0.title }}</div>
-                                <div class="movie-details">
-                                    <div class="movie-info-line">
-                                        <span>{{ movie_data.0.release_date.year }}</span>
-                                        <span>{{ movie_data.1 }}</span>
-                                        <span>{{ movie_data.2 }}</span>
-                                    </div>
-                                    <div class="movie-genres">
-                                        <span>{{ movie_data.3 }}</span>
+                        <a href="{% url 'movie_player' movie_data.0.movie_id %}" class="movie-link">
+                            <div class="movie-card" data-movie-id="{{ movie_data.0.movie_id }}">
+                                <button class="bookmark-btn">
+                                    <i class="fa-regular fa-bookmark"></i> <!-- Font Awesome star icon -->
+                                </button>
+                                <img class="movie-thumbnail" src="{{ movie_data.0.poster_url }}" alt="Movie Thumbnail">
+                                <div class="movie-info">
+                                    <div class="movie-title">{{ movie_data.0.title }}</div>
+                                    <div class="movie-details">
+                                        <div class="movie-info-line">
+                                            <span>{{ movie_data.0.release_date.year }}</span>
+                                            <span>{{ movie_data.1 }}</span>
+                                            <span>{{ movie_data.2 }}</span>
+                                        </div>
+                                        <div class="movie-genres">
+                                            <span>{{ movie_data.3 }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% endfor %}
                     </div>
                     <button class="scroll-btn right" onclick="scrollMovies(this, 1)">&#10095;</button>

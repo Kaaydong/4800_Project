@@ -4,14 +4,16 @@ from django.contrib.auth import get_user_model
 from .. import models as data
 
 
-class MovieListing():
-    age_restriction = 0
-
-    def __init__(self, age_restriction=4):
+class MovieListing:
+    def __init__(self, age_restriction=0):
+        # This initializes the age_restriction to the value passed in or 0 by default
         self.age_restriction = age_restriction
+
+
 
     # returns a movie as a tuple, with all of its required data
     # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted]
+
     def __generateMovieCardInfo(self, movie):
         duration = movie.duration_seconds
         restriction = movie.age_restriction
@@ -46,7 +48,8 @@ class MovieListing():
                 genres_formatted += ", " 
 
         return [movie, restriction_formatted, duration_formatted, genres_formatted]
-    
+
+
 
     # get 20 movies recommended to the user
     def getUserRecommended(self, user_id):
@@ -196,3 +199,18 @@ class MovieListing():
     def getMoviesForAdults(self):
         return ["For Adults", self.__getMoviesByAgeRestriction(4)]
 
+    def getMovieById(self, movie_id):
+        try:
+            # Query to retrieve the movie by its movie_id using the correct model
+            movie = data.Movie.objects.get(movie_id=movie_id)
+
+            # Now filter the movie by the user's age restriction
+            if movie.age_restriction <= self.age_restriction:
+                # Return the movie if it matches the age restriction
+                return movie
+            else:
+                # If the movie doesn't match the user's age restriction, return None
+                return None
+        except data.Movie.DoesNotExist:
+            # If the movie with the given ID does not exist, return None
+            return None

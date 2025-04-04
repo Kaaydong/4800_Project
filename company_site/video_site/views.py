@@ -51,6 +51,24 @@ def landing_page(request):
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
+def movie_player(request, movie_id):
+    # Authenticated user? Load settings.
+    if request.user.is_authenticated:
+        user = get_user_model().objects.get(id=request.user.id)
+        user_settings = models.Settings.objects.get(user_key=user)
+        ml = ML.MovieListing(user_settings.max_age_restriction)
+    else:
+        ml = ML.MovieListing()
+
+    # Fetch the movie data
+    movie_data = ml.getMovieById(movie_id)
+
+    if not movie_data:
+        return render(request, 'video_site/404.html', status=404)
+
+    return render(request, 'video_site/movie_player.html', {
+        'movie': movie_data
+    })
 
 def bookmarks_page(request):
     if request.user.is_authenticated:
