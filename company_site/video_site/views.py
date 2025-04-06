@@ -1,7 +1,12 @@
 import copy
+import os 
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
+from django.http import FileResponse, HttpResponse
+
+from django.conf import settings
 from user_forms import models
 
 from . import models as data
@@ -16,8 +21,9 @@ def landing_page(request):
 
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
-        account_links = ["javascript:;", "users/logout"]
+        account_links = ["javascript:;", "/users/logout"]
         account_settings = [user_settings.max_age_restriction]
+        account_features = True
 
         # Generate Movie Lists with User Preferences
         ml = ML.MovieListing(user_settings.max_age_restriction)
@@ -28,8 +34,9 @@ def landing_page(request):
     else:
         # Render info if Guest Account is being used
         account_info = ["Guest", "Login", "Register"]
-        account_links = ["users/login", "users/register"]
+        account_links = ["/users/login", "/users/register"]
         account_settings = [1]
+        account_features = False
 
         # Generate Movie Lists without User Preferences
         ml = ML.MovieListing()
@@ -48,27 +55,10 @@ def landing_page(request):
                   {'ACCOUNT_INFO': account_info,
                    'ACCOUNT_LINKS': account_links,
                    'ACCOUNT_SETTINGS': account_settings,
+                   'ACCOUNT_FEATURES': account_features,
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-def movie_player(request, movie_id):
-    # Authenticated user? Load settings.
-    if request.user.is_authenticated:
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)
-        ml = ML.MovieListing(user_settings.max_age_restriction)
-    else:
-        ml = ML.MovieListing()
-
-    # Fetch the movie data
-    movie_data = ml.getMovieById(movie_id)
-
-    if not movie_data:
-        return render(request, 'video_site/404.html', status=404)
-
-    return render(request, 'video_site/movie_player.html', {
-        'movie': movie_data
-    })
 
 def bookmarks_page(request):
     if request.user.is_authenticated:
@@ -102,4 +92,81 @@ def bookmarks_page(request):
         return redirect("/users/login")
     
     return render(request, "video_site/bookmarks_page.html",
-                  {'ACCOUNT_USERNAME': username, 'ACCOUNT_SETTINGS': account_settings, 'ACCOUNT_BOOKMARKS': movies_combined_list})
+                  {'ACCOUNT_USERNAME': username, 
+                   'ACCOUNT_SETTINGS': account_settings, 
+                   'ACCOUNT_BOOKMARKS': movies_combined_list})
+
+
+def movie_player(request, movie_id):
+    if request.user.is_authenticated:
+        user = get_user_model().objects.get(id=request.user.id)
+        user_settings = models.Settings.objects.get(user_key=user)
+        user_settings = models.Settings.objects.get(user_key=user)        
+
+        # Render info if User is logged in
+        account_info = [request.user.username, "Settings", "Logout"]
+        account_links = ["javascript:;", "/users/logout"]
+        account_settings = [user_settings.max_age_restriction]
+        account_features = True
+
+        # Create Movie Listing
+        ml = ML.MovieListing(user_settings.max_age_restriction)
+
+    else:
+        # Render info if Guest Account is being used
+        account_info = ["Guest", "Login", "Register"]
+        account_links = ["/users/login", "/users/register"]
+        account_settings = [1]
+        account_features = False
+
+        # Create Movie Listing
+        ml = ML.MovieListing()
+
+    # Fetch the movie data
+    movie_data = ml.getMovieById(movie_id)
+
+    if not movie_data:
+        return render(request, 'video_site/404.html', status=404)
+    
+    hls_playlist_url = reverse('serve_hls_playlist', args=[movie_id])
+
+    return render(request, 'video_site/movie_player.html',
+                  {'ACCOUNT_INFO': account_info,
+                   'ACCOUNT_LINKS': account_links,
+                   'ACCOUNT_SETTINGS': account_settings,
+                   'ACCOUNT_FEATURES': account_features,
+                   'HLS_URL': hls_playlist_url,
+                   })
+
+
+def serve_hls_playlist(request, movie_id):
+    try:
+        movie = get_object_or_404(data.Movie, pk=movie_id)
+        hls_playlist_path = settings.BASE_DIR / "videos" / movie.movie_file_url
+
+        with open(hls_playlist_path, 'r') as m3u8_file:
+            m3u8_content = m3u8_file.read()
+
+        base_url = request.build_absolute_uri('/') 
+        serve_hls_segment_url = base_url +"serve_hls_segment/" + str(movie_id)
+        print(serve_hls_segment_url)
+        m3u8_content = m3u8_content.replace('{{ dynamic_path }}', serve_hls_segment_url)
+
+
+        return HttpResponse(m3u8_content, content_type='application/vnd.apple.mpegurl')
+    except (data.Movie.DoesNotExist, FileNotFoundError):
+        return HttpResponse("Video or HLS playlist not found", status=404)
+
+
+def serve_hls_segment(request, movie_id, segment_name):
+    try:
+        movie = get_object_or_404(data.Movie, pk=movie_id)
+        hls_playlist_path = settings.BASE_DIR / "videos" / movie.movie_file_url
+
+        hls_directory = os.path.dirname(hls_playlist_path)
+        segment_path = os.path.join(hls_directory, segment_name)
+
+        # Serve the HLS segment as a binary file response
+        return FileResponse(open(segment_path, 'rb'))
+    except (data.Movie.DoesNotExist, FileNotFoundError):
+        return HttpResponse("Video or HLS segment not found", status=404)

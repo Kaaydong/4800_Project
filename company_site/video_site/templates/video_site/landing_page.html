@@ -31,14 +31,16 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                        <a class="nav-link" href="bookmarks">Bookmarks</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="#">History</a>
-                        </li>
-                    </ul>
+                    {% if ACCOUNT_FEATURES %}
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                            <a class="nav-link" href="/bookmarks">Bookmarks</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" href="#">History</a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <ul class="navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="/about_us/home" target="_blank">About Us</a>
@@ -69,6 +71,11 @@
             </div>
         </div>
 
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <div>
             <!-- The Modal -->
             <div id="user_modal" class="modal">

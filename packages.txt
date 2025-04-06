@@ -5,3 +5,6 @@ daphne
 
 django-crispy-forms
 crispy-bootstrap5
+
+celery
+Pillow

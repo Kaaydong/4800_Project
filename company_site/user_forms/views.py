@@ -39,13 +39,3 @@ def login_page(request):
 def logout_view(request):
     logout(request) 
     return redirect("/")
-
-
-def account_settings_page(request):
-    if request.user.is_authenticated:
-        # Render info if User is logged in
-        account_info = [request.user.username]
-    else:
-        return redirect("/users/login")
-    
-    return render(request, "user_forms/account_settings.html", {'ACCOUNT_INFO': account_info})
