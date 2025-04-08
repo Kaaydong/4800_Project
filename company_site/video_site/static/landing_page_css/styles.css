@@ -54,12 +54,12 @@ body {
     gap: 20px; /* Adds spacing between the cards */
     scrollbar-width: none; /* Hide scrollbar */
     scroll-behavior: smooth; /* Enable smooth scrolling */
-    padding-top: 35px; /* Reduce this if there is too much space between section title
+    padding-top: 45px; /* Reduce this if there is too much space between section title
     and movie-card but reduce too much and movie-card will be hidden behind top and bottom margins*/
     padding-bottom: 60px;
     z-index: 2;
     position: relative;
-    height: 500px;
+    height: 530px;
     border: 0px solid red;
 }
 
@@ -179,7 +179,7 @@ body {
 .movie-title {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .movie-details {
