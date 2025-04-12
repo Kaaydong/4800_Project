@@ -1,0 +1,21 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:5.088422,
+{{ dynamic_path }}/you-know-im-from_hls0.ts
+#EXTINF:10.427078,
+{{ dynamic_path }}/you-know-im-from_hls1.ts
+#EXTINF:10.427089,
+{{ dynamic_path }}/you-know-im-from_hls2.ts
+#EXTINF:10.427078,
+{{ dynamic_path }}/you-know-im-from_hls3.ts
+#EXTINF:9.592922,
+{{ dynamic_path }}/you-know-im-from_hls4.ts
+#EXTINF:4.045700,
+{{ dynamic_path }}/you-know-im-from_hls5.ts
+#EXTINF:4.045711,
+{{ dynamic_path }}/you-know-im-from_hls6.ts
+#EXTINF:1.918711,
+{{ dynamic_path }}/you-know-im-from_hls7.ts
+#EXT-X-ENDLIST

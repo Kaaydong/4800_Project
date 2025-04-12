@@ -1,0 +1,27 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:11
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:7.966300,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls0.ts
+#EXTINF:4.337667,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls1.ts
+#EXTINF:5.338678,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls2.ts
+#EXTINF:2.377378,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls3.ts
+#EXTINF:6.965300,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls4.ts
+#EXTINF:3.420078,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls5.ts
+#EXTINF:7.257267,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls6.ts
+#EXTINF:3.003000,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls7.ts
+#EXTINF:10.635633,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls8.ts
+#EXTINF:2.752756,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls9.ts
+#EXTINF:6.006400,
+{{ dynamic_path }}/here-are-again-on-the-deck-of-titanic_hls10.ts
+#EXT-X-ENDLIST

@@ -1,0 +1,13 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:6
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:5.672333,
+{{ dynamic_path }}/what-they-did_hls0.ts
+#EXTINF:4.671333,
+{{ dynamic_path }}/what-they-did_hls1.ts
+#EXTINF:4.838167,
+{{ dynamic_path }}/what-they-did_hls2.ts
+#EXTINF:0.250267,
+{{ dynamic_path }}/what-they-did_hls3.ts
+#EXT-X-ENDLIST

@@ -1,0 +1,19 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:7
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:7.215544,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls0.ts
+#EXTINF:4.295967,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls1.ts
+#EXTINF:3.712044,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls2.ts
+#EXTINF:5.463800,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls3.ts
+#EXTINF:4.546211,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls4.ts
+#EXTINF:4.921589,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls5.ts
+#EXTINF:1.877000,
+{{ dynamic_path }}/so-i-gotta-make-a-lot-more-water_hls6.ts
+#EXT-X-ENDLIST

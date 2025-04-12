@@ -1,0 +1,23 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:7
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:5.880878,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls0.ts
+#EXTINF:4.170833,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls1.ts
+#EXTINF:6.548211,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls2.ts
+#EXTINF:3.712033,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls3.ts
+#EXTINF:5.463800,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls4.ts
+#EXTINF:5.005000,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls5.ts
+#EXTINF:7.173833,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls6.ts
+#EXTINF:3.545200,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls7.ts
+#EXTINF:1.501600,
+{{ dynamic_path }}/let-the-dark-magic-flow-through-one-last_hls8.ts
+#EXT-X-ENDLIST

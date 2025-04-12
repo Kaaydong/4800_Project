@@ -1,0 +1,21 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:9
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:6.339678,
+{{ dynamic_path }}/who-this-s5_hls0.ts
+#EXTINF:8.758756,
+{{ dynamic_path }}/who-this-s5_hls1.ts
+#EXTINF:1.751756,
+{{ dynamic_path }}/who-this-s5_hls2.ts
+#EXTINF:6.381378,
+{{ dynamic_path }}/who-this-s5_hls3.ts
+#EXTINF:4.504500,
+{{ dynamic_path }}/who-this-s5_hls4.ts
+#EXTINF:6.006011,
+{{ dynamic_path }}/who-this-s5_hls5.ts
+#EXTINF:7.340667,
+{{ dynamic_path }}/who-this-s5_hls6.ts
+#EXTINF:2.961489,
+{{ dynamic_path }}/who-this-s5_hls7.ts
+#EXT-X-ENDLIST

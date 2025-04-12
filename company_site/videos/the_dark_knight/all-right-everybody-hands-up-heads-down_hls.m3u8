@@ -1,0 +1,15 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10.218544,
+{{ dynamic_path }}/all-right-everybody-hands-up-heads-down_hls0.ts
+#EXTINF:1.710044,
+{{ dynamic_path }}/all-right-everybody-hands-up-heads-down_hls1.ts
+#EXTINF:4.129122,
+{{ dynamic_path }}/all-right-everybody-hands-up-heads-down_hls2.ts
+#EXTINF:5.046711,
+{{ dynamic_path }}/all-right-everybody-hands-up-heads-down_hls3.ts
+#EXTINF:7.925111,
+{{ dynamic_path }}/all-right-everybody-hands-up-heads-down_hls4.ts
+#EXT-X-ENDLIST

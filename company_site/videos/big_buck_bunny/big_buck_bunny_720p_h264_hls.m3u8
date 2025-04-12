@@ -1,0 +1,223 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:14
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls0.ts
+#EXTINF:1.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls1.ts
+#EXTINF:3.875000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls2.ts
+#EXTINF:7.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls3.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls4.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls5.ts
+#EXTINF:3.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls6.ts
+#EXTINF:8.375000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls7.ts
+#EXTINF:4.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls8.ts
+#EXTINF:3.125000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls9.ts
+#EXTINF:5.625000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls10.ts
+#EXTINF:1.875000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls11.ts
+#EXTINF:2.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls12.ts
+#EXTINF:2.083333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls13.ts
+#EXTINF:4.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls14.ts
+#EXTINF:9.791667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls15.ts
+#EXTINF:1.666667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls16.ts
+#EXTINF:8.333333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls17.ts
+#EXTINF:4.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls18.ts
+#EXTINF:8.750000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls19.ts
+#EXTINF:5.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls20.ts
+#EXTINF:2.916667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls21.ts
+#EXTINF:2.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls22.ts
+#EXTINF:3.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls23.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls24.ts
+#EXTINF:9.083333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls25.ts
+#EXTINF:2.708333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls26.ts
+#EXTINF:6.916667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls27.ts
+#EXTINF:4.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls28.ts
+#EXTINF:1.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls29.ts
+#EXTINF:1.000000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls30.ts
+#EXTINF:2.916667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls31.ts
+#EXTINF:1.791667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls32.ts
+#EXTINF:8.125000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls33.ts
+#EXTINF:1.625000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls34.ts
+#EXTINF:2.750000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls35.ts
+#EXTINF:8.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls36.ts
+#EXTINF:2.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls37.ts
+#EXTINF:3.541667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls38.ts
+#EXTINF:8.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls39.ts
+#EXTINF:1.750000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls40.ts
+#EXTINF:5.708333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls41.ts
+#EXTINF:8.875000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls42.ts
+#EXTINF:3.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls43.ts
+#EXTINF:2.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls44.ts
+#EXTINF:6.208333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls45.ts
+#EXTINF:9.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls46.ts
+#EXTINF:1.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls47.ts
+#EXTINF:7.250000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls48.ts
+#EXTINF:1.250000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls49.ts
+#EXTINF:3.333333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls50.ts
+#EXTINF:5.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls51.ts
+#EXTINF:5.000000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls52.ts
+#EXTINF:4.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls53.ts
+#EXTINF:5.625000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls54.ts
+#EXTINF:5.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls55.ts
+#EXTINF:10.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls56.ts
+#EXTINF:3.333333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls57.ts
+#EXTINF:1.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls58.ts
+#EXTINF:3.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls59.ts
+#EXTINF:4.916667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls60.ts
+#EXTINF:7.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls61.ts
+#EXTINF:4.708333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls62.ts
+#EXTINF:4.958333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls63.ts
+#EXTINF:11.958333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls64.ts
+#EXTINF:2.750000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls65.ts
+#EXTINF:2.875000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls66.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls67.ts
+#EXTINF:5.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls68.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls69.ts
+#EXTINF:5.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls70.ts
+#EXTINF:1.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls71.ts
+#EXTINF:2.666667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls72.ts
+#EXTINF:2.958333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls73.ts
+#EXTINF:2.833333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls74.ts
+#EXTINF:9.625000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls75.ts
+#EXTINF:1.708333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls76.ts
+#EXTINF:2.000000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls77.ts
+#EXTINF:1.625000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls78.ts
+#EXTINF:8.541667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls79.ts
+#EXTINF:3.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls80.ts
+#EXTINF:2.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls81.ts
+#EXTINF:5.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls82.ts
+#EXTINF:4.041667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls83.ts
+#EXTINF:6.375000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls84.ts
+#EXTINF:4.375000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls85.ts
+#EXTINF:4.750000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls86.ts
+#EXTINF:5.041667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls87.ts
+#EXTINF:11.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls88.ts
+#EXTINF:6.541667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls89.ts
+#EXTINF:8.000000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls90.ts
+#EXTINF:5.041667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls91.ts
+#EXTINF:1.541667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls92.ts
+#EXTINF:7.291667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls93.ts
+#EXTINF:1.500000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls94.ts
+#EXTINF:2.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls95.ts
+#EXTINF:2.458333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls96.ts
+#EXTINF:4.166667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls97.ts
+#EXTINF:13.958333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls98.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls99.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls100.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls101.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls102.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls103.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls104.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls105.ts
+#EXTINF:3.583333,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls106.ts
+#EXTINF:10.416667,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls107.ts
+#EXTINF:5.125000,
+{{ dynamic_path }}/big_buck_bunny_720p_h264_hls108.ts
+#EXT-X-ENDLIST
