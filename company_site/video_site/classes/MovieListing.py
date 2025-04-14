@@ -22,6 +22,7 @@ class MovieListing:
         restriction = movie.age_restriction
         genres = data.MovieGenreEntry.objects.filter(movie_key=movie.movie_id)
 
+        # Create the String for how the age restriction should be displayed
         restriction_formatted = ""
         if restriction == 1:
             restriction_formatted = " | G | "
@@ -34,6 +35,7 @@ class MovieListing:
         else:
             restriction_formatted = " | NR | "
 
+        # Create the String for how the movie duration should be displayed
         duration_formatted = ""
         hours = duration // 3600
         if hours > 0:
@@ -43,6 +45,7 @@ class MovieListing:
             duration_formatted = str(duration // 60) + "m "
             duration_formatted += str(duration % 60) + "s"
 
+        # Create the Strong for how the genres should be displayed
         genres_formatted = ""
         genres = genres[:3]
         for i in range(0, len(genres)):
@@ -50,6 +53,7 @@ class MovieListing:
             if i < len(genres) - 1:
                 genres_formatted += ", " 
 
+        # Determine whether the bookmark icon is activated or not
         isBookmarked = False
         if self.user_id != -1:
             try:
@@ -209,6 +213,7 @@ class MovieListing:
     def getMoviesForAdults(self):
         return ["For Adults", self.__getMoviesByAgeRestriction(4)]
     
+    # get a list of all movies bookmarked by a user
     def getBookmarkedMovies(self):
         returned_list = []
         for movie in self.bookmarks:
