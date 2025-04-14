@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 
 from django.contrib.auth import get_user_model
-from . import models
+from . import models as data
 from user_forms import models as user_data_models
 
 from django.core.serializers import serialize
@@ -20,13 +20,28 @@ class ConnectionTest(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        expression = text_data_json['expression']
+        key = text_data_json['key']
 
-        # Save User Interaction
-        user_settings = user_data_models.Settings.objects.get(user_key=self.user)
-        user_settings.max_age_restriction = int(expression)
-        user_settings.save()
+        if key == "age_rating":
+            expression = text_data_json['expression']
 
+            # Save User Settings Interaction
+            user_settings = user_data_models.Settings.objects.get(user_key=self.user)
+            user_settings.max_age_restriction = int(expression)
+            user_settings.save()
+
+        elif key == "bookmark":
+            expression = text_data_json['expression']
+            bookmark_key = text_data_json['bookmark_key']
+
+            try:
+                # Removes bookmark
+                user_bookmark = data.BookmarkEntry.objects.get(movie_key=bookmark_key)
+                user_bookmark.delete()
+            except:
+                # Creates bookmark
+                bookmark = data.BookmarkEntry(user_key=self.user, movie_key=data.Movie.objects.get(pk=bookmark_key))
+                bookmark.save()
 
 
     # def receive(self, text_data):

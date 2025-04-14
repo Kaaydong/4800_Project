@@ -5,9 +5,15 @@ from .. import models as data
 
 
 class MovieListing:
-    def __init__(self, age_restriction=4):
+    def __init__(self, age_restriction = 4, user_id = -1):
         # This initializes the age_restriction to the value passed in or 4 by default
         self.age_restriction = age_restriction
+        self.movie_stats = data.MovieStatistics.objects.all()
+
+        self.user_id = user_id
+        if user_id != -1:
+            self.bookmarks = data.BookmarkEntry.objects.filter(user_key=user_id)
+        
 
     # returns a movie as a tuple, with all of its required data
     # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted]
@@ -44,13 +50,21 @@ class MovieListing:
             if i < len(genres) - 1:
                 genres_formatted += ", " 
 
-        return [movie, restriction_formatted, duration_formatted, genres_formatted]
+        isBookmarked = False
+        if self.user_id != -1:
+            try:
+                self.bookmarks.get(movie_key=movie.movie_id)
+                isBookmarked = True
+            except:
+                isBookmarked = False
+
+        return [movie, restriction_formatted, duration_formatted, genres_formatted, isBookmarked]
 
 
 
     # get 20 movies recommended to the user
-    def getUserRecommended(self, user_id):
-        watched_movies = data.WatchEntry.objects.filter(user_key=user_id, movie_key__age_restriction__lte=self.age_restriction)
+    def getUserRecommended(self):
+        watched_movies = data.WatchEntry.objects.filter(user_key=self.user_id, movie_key__age_restriction__lte=self.age_restriction)
 
         # get a list of all genres
         all_genres = data.Genre.objects.all()
@@ -94,9 +108,8 @@ class MovieListing:
 
     # Queries for every movie's stats and turns it into a list
     def __generateStatisticsList(self):
-        movie_stats = data.MovieStatistics.objects.all()
         movie_stat_list = []
-        for stat in movie_stats:
+        for stat in self.movie_stats:
             movie_stat_list.append(stat)
 
         return movie_stat_list
@@ -195,6 +208,13 @@ class MovieListing:
     # get 20 movies rated R
     def getMoviesForAdults(self):
         return ["For Adults", self.__getMoviesByAgeRestriction(4)]
+    
+    def getBookmarkedMovies(self):
+        returned_list = []
+        for movie in self.bookmarks:
+            returned_list.append(self.__generateMovieCardInfo(movie.movie_key))
+
+        return ["Bookmarks", returned_list]
 
     # Get Movie
     def getMovieById(self, movie_id):
