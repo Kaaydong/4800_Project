@@ -18,6 +18,7 @@
         <title>Movie Card</title>
         {% load static %}
         <link rel="stylesheet" href="{% static 'landing_page_css/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'movie_player_css/styles.css' %}">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
 
@@ -272,20 +273,13 @@
             </script>   
         </div>
 
-        <style>
-            .video-container {
-               position: absolute;
-               top: 50%;
-               left: 50%;
-               transform: translate(-50%, -50%);
-           }
         </style>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 mx-auto " style="height: 100vh;">
                     <div class="video-container ">
                         <!-- Video.js player -->
-                        <video id="hls-video" class="video-js vjs-default-skin text-center" controls preload="auto" width="640" height="360">
+                        <video id="hls-video" class="video-js vjs-default-skin text-center" controls preload="auto">
                             <!-- HLS source URL -->
                             <source src="{{ HLS_URL }}" type="application/x-mpegURL">
                             <!-- Fallback for non-supported browsers -->
@@ -297,9 +291,70 @@
                 </div>
             </div>
         </div>
+
+        <div id="movieModal" class="display-modal">
+            <div class="modal-content">
+                <div class="display-modal-header">
+                    <h3 class="display-modal-title">Title</h3>
+                    <button id="closeModal" class="close-btn">X</button>
+                </div>
+                <div class="display-modal-body info-grid">
+                    <div class="release-info">
+                        <strong>Year:</strong> 2003 &nbsp;
+                        <strong>Duration:</strong> 1h 40m &nbsp;
+                        <strong>Rating:</strong> PG
+                    </div>
+
+                    <div class="description">
+                        <h5>Description</h5>
+                        <p>This is a short summary of the movie plot.</p>
+                    </div>
+
+                    <div class="cast">
+                        <h5>Cast</h5>
+                        <p>Actor 1, Actor 2, Actor 3</p>
+                    </div>
+
+                    <div class="genre">
+                        <h5>Genre</h5>
+                        <p>Adventure, Animation</p>
+                    </div>
+                </div>
+                <div class="display-modal-footer">
+                    <button id="playButton" class="play-btn">Play</button>
+                </div>
+            </div>
+        </div>
         <script>
-            // Initialize the Video.js player
-            var player = videojs('hls-video');
+        // Initialize the Video.js player
+        var player = videojs('hls-video');
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("movieModal");
+            const closeBtn = document.getElementById("closeModal");
+            const playBtn = document.getElementById("playButton");
+            const video = document.getElementById("hls-video");
+
+            // Close modal on 'X' button click
+            closeBtn.addEventListener("click", function () {
+                modal.style.display = "none";
+            });
+
+            // Close modal and play video on 'Play' button click
+            playBtn.addEventListener("click", function () {
+                modal.style.display = "none";
+                if (video) {
+                    video.play();
+                }
+            });
+
+            // Close modal automatically when video starts playing
+            if (video) {
+                video.addEventListener("play", function () {
+                    modal.style.display = "none";
+                });
+            }
+        });
         </script>
 
         <!-- Bootstrap core JS-->

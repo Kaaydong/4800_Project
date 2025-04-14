@@ -1,0 +1,122 @@
+.video-container {
+               position: absolute;
+               top: 50%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+           }
+
+
+.display-modal {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50vh;
+    background: linear-gradient(to top, #000000, rgba(18, 18, 18, 0.6), transparent);
+    color: white;
+    z-index: 2000;
+    padding: 20px;
+    display: block;
+}
+
+/* Modal Content */
+.display-modal-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.display-modal-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.display-modal-title {
+    position: relative;
+    top: 100px;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Body */
+.display-modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.info-grid {
+    display: grid;
+    height: 500px;
+    grid-template-areas:
+        "release cast"
+        "description genre";
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    padding: 1rem;
+    color: white;
+    overflow: hidden;
+}
+
+.release-info {
+    grid-area: release;
+    position: relative;
+    top: 80%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.description {
+    grid-area: description;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.cast {
+    grid-area: cast;
+    position: relative;
+    top: 75%;
+    left: 60%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.genre {
+    grid-area: genre;
+    position: relative;
+    top: 30%;
+    left: 60%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.movie-description {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Footer (Play Button) */
+.display-modal-footer {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.play-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
