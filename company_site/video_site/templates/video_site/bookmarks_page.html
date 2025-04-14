@@ -19,6 +19,8 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'bookmarks_page_css/styles.css' %}">
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -29,14 +31,16 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                        <a class="nav-link" href="bookmarks">Bookmarks</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="#">History</a>
-                        </li>
-                    </ul>
+                    {% if ACCOUNT_FEATURES %}
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                            <a class="nav-link" href="/bookmarks">Bookmarks</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" href="#">History</a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <ul class="navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="/about_us/home" target="_blank">About Us</a>
@@ -47,17 +51,17 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="theme-menu" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme">
-                                {{ ACCOUNT_USERNAME }}
+                                {{ ACCOUNT_INFO.0 }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a id="user_button" type="button" class="dropdown-item d-flex align-items-center" href="javascript:;">
-                                        <span class="ms-2">Settings</span>
+                                    <a id="user_button" type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.0 }}">
+                                        <span class="ms-2">{{ ACCOUNT_INFO.1 }}</span>
                                     </a>
                                     </li>
                                     <li>
-                                    <a type="button" class="dropdown-item d-flex align-items-center" href="users/logout">
-                                        <span class="ms-2">Logout</span>
+                                    <a type="button" class="dropdown-item d-flex align-items-center" href="{{ ACCOUNT_LINKS.1 }}">
+                                        <span class="ms-2">{{ ACCOUNT_INFO.2 }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -67,6 +71,67 @@
             </div>
         </div>
 
+        <br>
+        <script>
+            let url = 'ws://' + window.location.host + '/ws/socket-server/';
+            const socket = new WebSocket(url);
+            socket.onmessage = function(e) {
+                console.log(e.data);
+            }
+    
+            socket.onclose = function(e) {
+                console.log("Socket closed!");
+            }
+
+            function send_age_rating_update(age_rating) {
+                socket.send(JSON.stringify(
+                    {
+                        key: "age_rating",
+                        expression: age_rating,
+                    }
+                ))
+            }
+
+            // When the user clicks the bookmark button, bookmark it
+            function bookmark_movie(movieId) {
+                var query = '[bookmark-id=\"' + movieId + '\"]';
+
+                const bookmarks = document.querySelectorAll(query);
+                var querySent = false;
+                bookmarks.forEach(bookmark => {
+                    icon = bookmark.children[0];
+
+                    if (icon.classList.contains("fa-regular")){
+                        icon.classList.replace("fa-regular", "fa-solid");
+
+                        if(!querySent){
+                            socket.send(JSON.stringify(
+                                {
+                                    key: "bookmark",
+                                    bookmark_key: movieId,
+                                    expression: true,
+                                }
+                            ))
+                            querySent = true;
+                        }
+                    }
+                    else {
+                        icon.classList.replace("fa-solid", "fa-regular");
+
+                        if(!querySent){
+                            socket.send(JSON.stringify(
+                                {
+                                    key: "bookmark",
+                                    bookmark_key: movieId,
+                                    expression: false,
+                                }
+                            ))
+                            querySent = true;
+                        }
+                    }
+                });
+            }
+        </script>
         <div>
             <!-- The Modal -->
             <div id="user_modal" class="modal">
@@ -80,7 +145,7 @@
                         <div class="card-body">
                             <div style="width:50%; padding-left:3em;">
                                 <label class="col-form-label col-form-label-lg mt-1" for="inputLarge">Username</label>
-                                <input class="form-control form-control-lg" type="text" placeholder="{{ ACCOUNT_USERNAME }}" id="inputLarge1" disabled>
+                                <input class="form-control form-control-lg" type="text" placeholder="{{ ACCOUNT_INFO.0 }}" id="inputLarge1" disabled>
 
                                 <label class="col-form-label col-form-label-lg mt-3" for="inputLarge">Password</label>
                                 <input class="form-control form-control-lg" type="text" placeholder="*********" id="inputLarge2" disabled>
@@ -88,26 +153,6 @@
                             <div style="padding-left:3em; padding-top:2em">
                                 <label class="col-form-label col-form-label-lg mt-1" for="inputLarge">Max Age Restriction</label>
                                 <ul class="nav nav-tabs" role="tablist">
-                                    <script>
-                                        let url = 'ws://' + window.location.host + '/ws/socket-server/';
-                                        const socket = new WebSocket(url);
-                                        socket.onmessage = function(e) {
-                                            console.log(e.data);
-                                        }
-                                
-                                        socket.onclose = function(e) {
-                                            console.log("Socket closed!");
-                                        }
-                        
-                                        function send_age_rating_update(age_rating) {
-                                            socket.send(JSON.stringify(
-                                                {
-                                                    expression: age_rating
-                                                }
-                                            ))
-                                            console.log(age_rating)
-                                        }
-                                    </script>
                                     {% if ACCOUNT_SETTINGS.0 == 1 %}
                                         <li class="nav-item" role="presentation" onclick="send_age_rating_update(1)">
                                             <a class="nav-link active" data-bs-toggle="tab" href="#G" aria-selected="true" 
@@ -258,25 +303,89 @@
         </div>
 
         <div>
+            <script>
+                var hyperlink_buffer = "";
+                var isRepeatingDisable = false;
+
+                // Makes bookmark button clickable by making parent unclickable
+                function disable_link(movieId) {
+                    if(!isRepeatingDisable){
+                        var query = '[bookmark-id=\"' + movieId + '\"]';
+
+                        const bookmarks = document.querySelectorAll(query);
+                        var loop_once = false;
+                        bookmarks.forEach(bookmark => {
+                            parent_hyperlink = bookmark.parentElement.parentElement;
+                            
+                            if(!loop_once){
+                                hyperlink_buffer = parent_hyperlink.href.substring(0); 
+                                loop_once = true;
+                            }
+                            
+                            parent_hyperlink.href = "javascript:;";
+                        });
+                        isRepeatingDisable = true;
+                    }
+                }
+
+                // Reverts changes to make movie card clickable
+                function enable_link(movieId) {
+                    var query = '[bookmark-id=\"' + movieId + '\"]';
+
+                    const bookmarks = document.querySelectorAll(query);
+                    bookmarks.forEach(bookmark => {
+                        parent_hyperlink = bookmark.parentElement.parentElement;
+                        
+                        parent_hyperlink.href = hyperlink_buffer.substring(0);
+                    });
+                    isRepeatingDisable = false;
+                }
+            </script>
+            
+            {% for movie_category in MOVIE_LIST %}
             <div class="movie-section">
-                <h2 class="section-title">Bookmarks</h2>
-                <div class="movie-row">
-                    {% for movie, duration in ACCOUNT_BOOKMARKS %}
-                        {% for i in '012'|make_list %}
-                            <div class="movie-card">
-                                <img class="movie-thumbnail" src="{{ movie.poster_url }}" alt="Movie Thumbnail">
+                <h2 class="section-title">{{ movie_category.0 }}</h2>
+                <div class="movie-container">
+                    <div class="movie-row">
+                        {% for movie_data in movie_category.1 %}
+                        <a href="{% url 'movie_player' movie_data.0.movie_id %}" class="movie-link" card-id="">
+                            <div class="movie-card" data-movie-id="{{ movie_data.0.movie_id }}">
+                                {% if ACCOUNT_FEATURES %}
+                                    <button class="bookmark-btn" 
+                                    onclick="bookmark_movie({{ movie_data.0.movie_id }})" 
+                                    onmouseover="disable_link({{ movie_data.0.movie_id }})"
+                                    onmouseout="enable_link({{ movie_data.0.movie_id }})"
+                                    bookmark-id="{{ movie_data.0.movie_id }}">
+                                        {% if movie_data.4 %}
+                                            <i class="fa-solid fa-bookmark"></i>
+                                        {% else %}
+                                            <i class="fa-regular fa-bookmark"></i>
+                                        {% endif %}
+                                    </button>
+                                {% endif %}
+                                <img class="movie-thumbnail" src="{% static movie_data.0.poster_url %}" alt="Movie Thumbnail">
                                 <div class="movie-info">
-                                    <div class="movie-title">{{ movie.title }}</div>
+                                    <div class="movie-title">{{ movie_data.0.title }}</div>
                                     <div class="movie-details">
-                                        <span>{{ duration }}</span>
+                                        <div class="movie-info-line">
+                                            <span>{{ movie_data.0.release_date.year }}</span>
+                                            <span>{{ movie_data.1 }}</span>
+                                            <span>{{ movie_data.2 }}</span>
+                                        </div>
+                                        <div class="movie-genres">
+                                            <span>{{ movie_data.3 }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </a>
                         {% endfor %}
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
+
 
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -26,10 +26,10 @@ def landing_page(request):
         account_features = True
 
         # Generate Movie Lists with User Preferences
-        ml = ML.MovieListing(user_settings.max_age_restriction)
+        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
 
         generated_movie_lists = [] # Format = ['name', movie_data]
-        generated_movie_lists.append(ml.getUserRecommended(request.user.id))
+        generated_movie_lists.append(ml.getUserRecommended())
 
     else:
         # Render info if Guest Account is being used
@@ -64,37 +64,29 @@ def bookmarks_page(request):
     if request.user.is_authenticated:
         user = get_user_model().objects.get(id=request.user.id)
         user_settings = models.Settings.objects.get(user_key=user)
+        user_settings = models.Settings.objects.get(user_key=user)        
 
+        # Render info if User is logged in
+        account_info = [request.user.username, "Settings", "Logout"]
+        account_links = ["javascript:;", "/users/logout"]
         account_settings = [user_settings.max_age_restriction]
-        username = request.user.username
+        account_features = True
 
-        bookmarks = data.BookmarkEntry.objects.filter(user_key=user)
-        movies_list = []
-        for movie in bookmarks:
-            movies_list.append(data.Movie.objects.get(movie_id=movie.movie_key.movie_id))
-        
-        duration_list = []
-        for movie in copy.deepcopy(movies_list):
-            duration_string = ""
-            
-            hours = movie.duration_seconds // 3600
-            if hours > 0:
-                duration_string = str(movie.duration_seconds // 3600) + "h "
-                
-            duration_string += str(movie.duration_seconds // 60) + "m " + str(movie.duration_seconds % 60) + "s"
-            duration_list.append(duration_string)
-
-        movies_combined_list = []
-        for m, d in zip(movies_list, duration_list):
-            movies_combined_list.append([m, d])
+        # Generate Movie Lists with User Preferences
+        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
+        generated_movie_lists = [] # Format = ['name', movie_data]
+        generated_movie_lists.append(ml.getBookmarkedMovies())
 
     else:
         return redirect("/users/login")
     
-    return render(request, "video_site/bookmarks_page.html",
-                  {'ACCOUNT_USERNAME': username, 
-                   'ACCOUNT_SETTINGS': account_settings, 
-                   'ACCOUNT_BOOKMARKS': movies_combined_list})
+    return render(request, 'video_site/bookmarks_page.html',
+                  {'ACCOUNT_INFO': account_info,
+                   'ACCOUNT_LINKS': account_links,
+                   'ACCOUNT_SETTINGS': account_settings,
+                   'ACCOUNT_FEATURES': account_features,
+                   'MOVIE_LIST': generated_movie_lists,
+                   })
 
 
 def movie_player(request, movie_id):

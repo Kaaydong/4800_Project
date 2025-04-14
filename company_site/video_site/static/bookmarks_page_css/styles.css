@@ -1,7 +1,7 @@
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 99999; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -46,31 +46,97 @@ body {
 }
 
 .movie-card {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth expand */
+    transform: scale(1);
     background-color: #1e1e1e;
     padding: 10px;
     border-radius: 10px;
-    width: 250px;
+    width: 260px;
+    aspect-ratio: 2/3;
+
     display: flex;
+    flex: 0 0 calc(100% / 7.5 - 20px); /* 7.5 movie cards per row */
     flex-direction: column;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds shadow to the card */
 }
+.movie-card a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none; /* Remove the default underline */
+}
+
+/* This media stuff might be unnecessary */
+@media (max-width: 1200px) {
+    .movie-card {
+        width: 18%;  /* Adjust for smaller screens (approx. 5-6 cards per row) */
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-card {
+        width: 40%;  /* Adjust for smaller screens (approx. 3-4 cards per row) */
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card {
+        width: 90%;  /* Adjust for mobile devices (1 card per row) */
+    }
+}
+.movie-card:hover {
+    height: 450px;
+    transform: scale(1.2); /* Expands the card when hovered over */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 9; /* Make sure the card stays on top of others when hovered */
+}
+.movie-card:hover .movie-info {
+    display: block; /* Show movie details on hover */
+}
+
+.bookmark-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: gold;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Smooth transition for visibility */
+}
+.movie-card:hover .bookmark-btn {
+    opacity: 1; /* Make the button visible */
+    visibility: visible; /* Ensure the button is visible */
+    transition: opacity 0.3s ease, visibility 0s; /* Smooth transition for visibility */
+}
+.bookmark-btn:hover {
+    color: gold;  /* Add hover effect (e.g., change color to gold on hover) */
+}
 
 .movie-thumbnail {
     width: 100%;
-    height: auto;
+    height: 340px;
     border-radius: 5px;
 }
 
 .movie-info {
+    position: relative;
+    display: none;
     margin-top: 10px;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth expand */
 }
 
 .movie-title {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .movie-details {
@@ -80,4 +146,10 @@ body {
 .movie-description {
     font-size: 12px;
     color: #777;
+}
+
+.movie-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
