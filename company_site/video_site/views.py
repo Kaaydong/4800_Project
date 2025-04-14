@@ -12,12 +12,12 @@ from user_forms import models
 from . import models as data
 from .classes import MovieListing as ML
 
-# Create your views here.
+# Render Landing Webpage
 def landing_page(request):
     if request.user.is_authenticated:
+        # Retrieve User info
         user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)
-        user_settings = models.Settings.objects.get(user_key=user)        
+        user_settings = models.Settings.objects.get(user_key=user)   
 
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
@@ -59,12 +59,12 @@ def landing_page(request):
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-
+# Render Bookmarks Webpage
 def bookmarks_page(request):
     if request.user.is_authenticated:
+        # Retrieve User info
         user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)
-        user_settings = models.Settings.objects.get(user_key=user)        
+        user_settings = models.Settings.objects.get(user_key=user)       
 
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
@@ -88,12 +88,12 @@ def bookmarks_page(request):
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-
+# Render Movie Player Webpage
 def movie_player(request, movie_id):
     if request.user.is_authenticated:
+        # Retrieve User info
         user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)
-        user_settings = models.Settings.objects.get(user_key=user)        
+        user_settings = models.Settings.objects.get(user_key=user)     
 
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
@@ -117,6 +117,7 @@ def movie_player(request, movie_id):
     # Fetch the movie data
     movie_data = ml.getMovieById(movie_id)
 
+    # Return 404 if requested movie doesn't exist
     if not movie_data:
         return render(request, 'video_site/404.html', status=404)
     
@@ -130,7 +131,7 @@ def movie_player(request, movie_id):
                    'HLS_URL': hls_playlist_url,
                    })
 
-
+# Serve Movie given movie ID
 def serve_hls_playlist(request, movie_id):
     try:
         movie = get_object_or_404(data.Movie, pk=movie_id)
@@ -141,15 +142,14 @@ def serve_hls_playlist(request, movie_id):
 
         base_url = request.build_absolute_uri('/') 
         serve_hls_segment_url = base_url +"serve_hls_segment/" + str(movie_id)
-        print(serve_hls_segment_url)
         m3u8_content = m3u8_content.replace('{{ dynamic_path }}', serve_hls_segment_url)
 
-
         return HttpResponse(m3u8_content, content_type='application/vnd.apple.mpegurl')
+    
     except (data.Movie.DoesNotExist, FileNotFoundError):
         return HttpResponse("Video or HLS playlist not found", status=404)
 
-
+# Serve a HLS segement of a movie
 def serve_hls_segment(request, movie_id, segment_name):
     try:
         movie = get_object_or_404(data.Movie, pk=movie_id)

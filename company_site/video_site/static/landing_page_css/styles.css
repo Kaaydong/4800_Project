@@ -50,7 +50,7 @@ body {
 .movie-row {
     display: flex;
     overflow-x: scroll;
-    overflow-y: visible;
+    overflow-y: hidden;
     gap: 20px; /* Adds spacing between the cards */
     scrollbar-width: none; /* Hide scrollbar */
     scroll-behavior: smooth; /* Enable smooth scrolling */
@@ -67,12 +67,13 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-60%);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.75);
     color: white;
     border: none;
     cursor: pointer;
-    width: 80px;
-    height: 344px;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
     display: none; /* Initially hidden */
     z-index: 10;
 }
@@ -159,7 +160,7 @@ body {
     transition: opacity 0.3s ease, visibility 0s; /* Smooth transition for visibility */
 }
 .bookmark-btn:hover {
-    color: gold;  /* Add hover effect (e.g., change color to gold on hover) */
+    color: rgb(40, 186, 226);  /* Add hover effect (e.g., change color to gold on hover) */
 }
 
 .movie-thumbnail {
