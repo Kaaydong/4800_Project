@@ -116,12 +116,10 @@ def movie_player(request, movie_id):
         ml = ML.MovieListing()
 
     # Fetch the movie data
-    movie_data = ml.getMovieById(movie_id)
-    formatted_data = ml._MovieListing__generateMovieCardInfo(movie_data)
-
+    formatted_data = ml.getMovieById(movie_id)
 
     # Return 404 if requested movie doesn't exist
-    if not movie_data:
+    if not formatted_data:
         return render(request, 'video_site/404.html', status=404)
     
     hls_playlist_url = reverse('serve_hls_playlist', args=[movie_id])
@@ -132,7 +130,7 @@ def movie_player(request, movie_id):
                    'ACCOUNT_SETTINGS': account_settings,
                    'ACCOUNT_FEATURES': account_features,
                    'HLS_URL': hls_playlist_url,
-                   'MOVIE_DATA': movie_data,
+                   'MOVIE_DATA': formatted_data[0],
                    'AGE_RATING': formatted_data[1],
                    'DURATION': formatted_data[2],
                    'GENRES': formatted_data[3],

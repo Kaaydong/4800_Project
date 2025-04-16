@@ -16,7 +16,7 @@ class MovieListing:
         
 
     # returns a movie as a tuple, with all of its required data
-    # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted]
+    # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted, isMovieBookmarked]
     def __generateMovieCardInfo(self, movie):
         duration = movie.duration_seconds
         restriction = movie.age_restriction
@@ -40,7 +40,7 @@ class MovieListing:
         hours = duration // 3600
         if hours > 0:
             duration_formatted = str(duration // 3600) + "h "
-            duration_formatted += str(duration // 60) + "m"
+            duration_formatted += str(duration % 3600 // 60) + "m"
         else:
             duration_formatted = str(duration // 60) + "m "
             duration_formatted += str(duration % 60) + "s"
@@ -230,7 +230,7 @@ class MovieListing:
             # Now filter the movie by the user's age restriction
             if movie.age_restriction <= self.age_restriction:
                 # Return the movie if it matches the age restriction
-                return movie
+                return self.__generateMovieCardInfo(movie)
             else:
                 # If the movie doesn't match the user's age restriction, return None
                 return None

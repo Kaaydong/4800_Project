@@ -98,25 +98,36 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # },
 
-    #'postgres_db': {
-    #'default': {
+    # KAYDEN's LOCAL
+    # 'postgres_db': {
+    # 'default': {
     #    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #   #'NAME': 'dbtest',
-    #    'NAME': 'postgres',
+    #   'NAME': 'dbtest',
     #    'USER': 'postgres',
     #    'PASSWORD': '123potato321',
-    #    #'HOST': 'localhost',
-    #    'HOST': 'database-1.cfasgyq44u47.us-east-2.rds.amazonaws.com',
+    #    'HOST': 'localhost',
     #    'PORT': '5432',
-    #}
-      'default': {
-          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          'NAME': 'DBtest',
-          'USER': 'postgres',
-          'PASSWORD': 'Woofless13!',
-          'HOST': 'localhost',
-          'PORT': '5432',
-      }
+    # }
+
+    # KEON's LOCAL
+    #   'default': {
+    #       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #       'NAME': 'DBtest',
+    #       'USER': 'postgres',
+    #       'PASSWORD': 'Woofless13!',
+    #       'HOST': 'localhost',
+    #       'PORT': '5432',
+    #   }
+
+    # AWS DATABASE
+    'default': {
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': 'postgres',
+       'USER': 'postgres',
+       'PASSWORD': '123potato321',
+       'HOST': 'database-1.cfasgyq44u47.us-east-2.rds.amazonaws.com',
+       'PORT': '5432',
+    }
 }
 
 #DATABASE_ROUTERS = ['video_site.routers.Postgres_Router']
