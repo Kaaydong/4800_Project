@@ -45,6 +45,7 @@ def landing_page(request):
         generated_movie_lists.append(ml.getRandomMovies())
 
     # Add more categories
+
     generated_movie_lists.append(ml.getTopDaily())
     generated_movie_lists.append(ml.getTopWeekly())
     generated_movie_lists.append(ml.getTopAnnually())
@@ -116,6 +117,8 @@ def movie_player(request, movie_id):
 
     # Fetch the movie data
     movie_data = ml.getMovieById(movie_id)
+    formatted_data = ml._MovieListing__generateMovieCardInfo(movie_data)
+
 
     # Return 404 if requested movie doesn't exist
     if not movie_data:
@@ -129,6 +132,11 @@ def movie_player(request, movie_id):
                    'ACCOUNT_SETTINGS': account_settings,
                    'ACCOUNT_FEATURES': account_features,
                    'HLS_URL': hls_playlist_url,
+                   'MOVIE_DATA': movie_data,
+                   'AGE_RATING': formatted_data[1],
+                   'DURATION': formatted_data[2],
+                   'GENRES': formatted_data[3],
+                   'BOOKMARKED': formatted_data[4],
                    })
 
 # Serve Movie given movie ID

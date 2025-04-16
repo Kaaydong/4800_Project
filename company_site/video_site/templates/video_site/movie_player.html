@@ -295,29 +295,29 @@
         <div id="movieModal" class="display-modal">
             <div class="modal-content">
                 <div class="display-modal-header">
-                    <h3 class="display-modal-title">Title</h3>
+                    <h3 class="display-modal-title">{{ MOVIE_DATA.title }}</h3>
                     <button id="closeModal" class="close-btn">X</button>
                 </div>
                 <div class="display-modal-body info-grid">
                     <div class="release-info">
-                        <strong>Year:</strong> 2003 &nbsp;
-                        <strong>Duration:</strong> 1h 40m &nbsp;
-                        <strong>Rating:</strong> PG
+                        <span>{{ MOVIE_DATA.release_date.year }}</span>
+                        <span>{{ DURATION }}</span>
+                        <span>{{ AGE_RATING }}</span>
                     </div>
 
                     <div class="description">
                         <h5>Description</h5>
-                        <p>This is a short summary of the movie plot.</p>
+                        <p class="movie-description">{{ MOVIE_DATA.description }}</p>
                     </div>
 
                     <div class="cast">
                         <h5>Cast</h5>
-                        <p>Actor 1, Actor 2, Actor 3</p>
+                        <p><strong>Cast:</strong> {{ MOVIE_DATA.cast }}</p>
                     </div>
 
                     <div class="genre">
                         <h5>Genre</h5>
-                        <p>Adventure, Animation</p>
+                        <p><strong>Genre:</strong> {{ GENRES }}</p>
                     </div>
                 </div>
                 <div class="display-modal-footer">
