@@ -2,6 +2,7 @@ import random
 from django.contrib.auth import get_user_model
 
 from .. import models as data
+from difflib import get_close_matches
 
 
 class MovieListing:
@@ -221,7 +222,7 @@ class MovieListing:
 
         return ["Bookmarks", returned_list]
 
-    # Get Movie
+    # Get Movie by ID
     def getMovieById(self, movie_id):
         try:
             # Query to retrieve the movie by its movie_id using the correct model
@@ -237,3 +238,48 @@ class MovieListing:
         except data.Movie.DoesNotExist:
             # If the movie with the given ID does not exist, return None
             return None
+        
+
+    # Get Movie by a String query
+    def getMoviesByQuery(self, query, filter):
+        
+        # If query is empty, get movies purely by genre filter, if filter even exists
+        if query == None or query == "":
+            # Filter is empty
+            if filter == None or filter == -1:
+                results_filtered_genre = data.Movie.objects.all()
+
+            # Filter genre exists
+            else:
+                movies_from_genre = data.MovieGenreEntry.objects.filter(genre_key=filter)
+
+                results_filtered_genre = []
+                for movie in movies_from_genre:
+                    results_filtered_genre.append(movie.movie_key)
+        
+        # Query Exists, now do a string match
+        else:
+            # String match
+            names = data.Movie.objects.values_list('title', flat=True)
+            matches = get_close_matches(query, names, n=15, cutoff=0.3)
+            results = data.Movie.objects.filter(title__in=matches)
+
+            # Filter is empty
+            results_filtered_genre = []
+            if filter == None or filter == -1:
+                results_filtered_genre = list(results)
+
+            # Filter genre exists
+            else:
+                for result in list(results):
+                    try:
+                        q = data.MovieGenreEntry.objects.get(movie_key=result.movie_id, genre_key=filter)
+                        results_filtered_genre.append(q.movie_key)
+                    except:
+                        results_filtered_genre
+                
+        return_list = []
+        for result in results_filtered_genre:
+            return_list.append(self.__generateMovieCardInfo(result))
+
+        return ["", return_list]

@@ -168,3 +168,64 @@ def serve_hls_segment(request, movie_id, segment_name):
         return FileResponse(open(segment_path, 'rb'))
     except (data.Movie.DoesNotExist, FileNotFoundError):
         return HttpResponse("Video or HLS segment not found", status=404)
+    
+
+
+def search_view(request):
+    # Retrieve values from user input
+    query = request.GET.get('query')
+    filter = request.GET.get('genre_filter')
+    results = []
+
+    # Turn genre_id from filter to int
+    #   filter == None during first visit
+    #   filter == -1 if filter is set to None and user presses search
+    if filter:
+        filter = int(filter)
+
+    # Get required rendering information    
+    if request.user.is_authenticated:
+        # Retrieve User info
+        user = get_user_model().objects.get(id=request.user.id)
+        user_settings = models.Settings.objects.get(user_key=user)   
+
+        # Render info if User is logged in
+        account_info = [request.user.username, "Settings", "Logout"]
+        account_links = ["javascript:;", "/users/logout"]
+        account_settings = [user_settings.max_age_restriction]
+        account_features = True
+
+        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
+
+    else:
+        # Render info if Guest Account is being used
+        account_info = ["Guest", "Login", "Register"]
+        account_links = ["/users/login", "/users/register"]
+        account_settings = [1]
+        account_features = False
+
+        ml = ML.MovieListing()
+
+    # Get a List of genres for the filter option
+    genres = data.Genre.objects.all()
+
+    # Query database for movies matching the input query and genre filter
+    results_found = False
+    if query or filter:
+        results = [ml.getMoviesByQuery(query, filter)]
+        if len(results[0][1]) != 0:
+            results_found = True
+
+    return render(request, 'video_site/search_page.html',
+                {'ACCOUNT_INFO': account_info,
+                'ACCOUNT_LINKS': account_links,
+                'ACCOUNT_SETTINGS': account_settings,
+                'ACCOUNT_FEATURES': account_features,
+                'GENRES': genres,
+                'QUERY': query, 
+                'PAST_FILTER': filter,
+                'RESULTS': results,
+                'RESULTS_FOUND': results_found,
+                })
+
+    
