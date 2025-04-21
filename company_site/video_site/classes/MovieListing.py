@@ -240,7 +240,7 @@ class MovieListing:
             return None
         
 
-    # Get Movie by a String query
+    # Get Movie by a String query and Genre filter
     def getMoviesByQuery(self, query, filter):
         
         # If query is empty, get movies purely by genre filter, if filter even exists
@@ -259,19 +259,48 @@ class MovieListing:
         
         # Query Exists, now do a string match
         else:
-            # String match
-            names = data.Movie.objects.values_list('title', flat=True)
-            matches = get_close_matches(query, names, n=15, cutoff=0.3)
-            results = data.Movie.objects.filter(title__in=matches)
+            # String match with movie title
+            movie_names = data.Movie.objects.values_list('title', flat=True)
+            movie_matches = get_close_matches(query, movie_names, n=15, cutoff=0.3)
+            movie_results = data.Movie.objects.filter(title__in=movie_matches)
+
+            # String match with actor's names
+            actor_first_names = data.Actor.objects.values_list('first_name', flat=True)
+            actor_middle_names = data.Actor.objects.values_list('middle_name', flat=True)
+            actor_last_names = data.Actor.objects.values_list('last_name', flat=True)
+            
+                # Have a first + last name string to have a better match case
+            actor_first_last_names = []
+            for f, l in zip(actor_first_names, actor_last_names):
+                actor_first_last_names.append(f + " " + l)
+
+            first_name_matches = get_close_matches(query, actor_first_names, n=15, cutoff=0.56)
+            middle_name_matches = get_close_matches(query, actor_middle_names, n=15, cutoff=0.76)
+            last_name_matches = get_close_matches(query, actor_last_names, n=15, cutoff=0.56)
+            first_last_name_matches = get_close_matches(query, actor_first_last_names, n=15, cutoff=0.85)
+
+                # Just take the first name of the first and last name pair since that is all that is needed
+            for name in first_last_name_matches:
+                first_name_matches.append(name[:name.find(' ')])
+
+            first_name_results = data.MovieActorEntry.objects.filter(actor_key__first_name__in=first_name_matches).values_list('movie_key', flat=True)
+            middle_name_results = data.MovieActorEntry.objects.filter(actor_key__middle_name__in=middle_name_matches).values_list('movie_key', flat=True)
+            last_name_results = data.MovieActorEntry.objects.filter(actor_key__last_name__in=last_name_matches).values_list('movie_key', flat=True)
+
+            key_list = set(first_name_results).union(set(middle_name_results)).union(set(last_name_results))
+            name_results = data.Movie.objects.filter(movie_id__in=key_list)
+
+            # Final movie list
+            movie_results = set(movie_results).union(set(name_results))
 
             # Filter is empty
             results_filtered_genre = []
             if filter == None or filter == -1:
-                results_filtered_genre = list(results)
+                results_filtered_genre = list(movie_results)
 
             # Filter genre exists
             else:
-                for result in list(results):
+                for result in movie_results:
                     try:
                         q = data.MovieGenreEntry.objects.get(movie_key=result.movie_id, genre_key=filter)
                         results_filtered_genre.append(q.movie_key)
