@@ -20,15 +20,10 @@ html, body {
 }
 
 .vjs-big-play-button {
-    top: 40%;
-    left: 40%;
-    font-size: 3em;
-    background-color: rgba(255, 0, 0, 0.1);
-    border: 2px solid #fff;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
+
+    color: white !important; /* Ensures the play icon is white */
+    font-size: 40px !important; /* Makes the play button larger */
+    border: none !important;
 }
 
 .display-modal {
@@ -61,12 +56,16 @@ html, body {
 
 .display-modal-title {
     position: relative;
-    top: 100px;
-    margin: 0;
+    margin: 0 auto;
+    top: 100px; /* or fine-tune if needed */
+    font-size: 2rem; /* adjust size as needed */
+    font-weight: bold;
+    text-align: center;
 }
 
 .close-btn {
     background: none;
+    color: rgba(255, 255, 255, 0.7);
     border: none;
     font-size: 20px;
     cursor: pointer;
@@ -105,6 +104,7 @@ html, body {
     grid-area: description;
     padding: 10px;
     border-radius: 10px;
+    max-width: 50%;
 }
 
 .cast {
@@ -127,7 +127,6 @@ html, body {
 
 .movie-description {
     font-size: 16px;
-    color: #333;
 }
 
 /* Footer (Play Button) */
@@ -138,7 +137,9 @@ html, body {
 }
 
 .play-btn {
+    display: none; /* this button is a bit redundant now so its hidden, bit lazy to delete */
     padding: 10px 20px;
+    margin-top: -50px;
     background-color: #007bff;
     color: white;
     border: none;
