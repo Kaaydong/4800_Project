@@ -1,5 +1,6 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
+import datetime
 
 from django.contrib.auth import get_user_model
 from . import models as data
@@ -42,3 +43,23 @@ class ConnectionTest(WebsocketConsumer):
                 # Creates bookmark
                 bookmark = data.BookmarkEntry(user_key=self.user, movie_key=data.Movie.objects.get(pk=bookmark_key))
                 bookmark.save()
+
+        elif key == "video_time":
+
+            if self.user.is_authenticated:
+                time = int(text_data_json['current_time'])
+                movieId = int(text_data_json['movie_id'])
+
+                movie = data.Movie.objects.get(pk=movieId)
+
+                try:
+                    # Update current watch entry
+                    user_watch_entry = data.WatchEntry.objects.get(user_key=self.user, movie_key=movie)
+                    user_watch_entry.watch_progress = time
+                    user_watch_entry.updated_at = datetime.date.today()
+                    user_watch_entry.save()
+                
+                except:
+                    # Create new watch entry
+                    user_watch_entry = data.WatchEntry(user_key=self.user, movie_key=movie, watch_progress=time, updated_at=datetime.date.today())
+                    user_watch_entry.save()

@@ -10,7 +10,7 @@ from django.conf import settings
 from user_forms import models
 
 from . import models as data
-from .classes import MovieListing as ML
+from .modules import MovieListing as ML
 
 # Render Landing Webpage
 def landing_page(request):
@@ -89,8 +89,38 @@ def bookmarks_page(request):
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
+# Render Watch History Webpage
+def watch_history_page(request):
+    if request.user.is_authenticated:
+        # Retrieve User info
+        user = get_user_model().objects.get(id=request.user.id)
+        user_settings = models.Settings.objects.get(user_key=user)       
+
+        # Render info if User is logged in
+        account_info = [request.user.username, "Settings", "Logout"]
+        account_links = ["javascript:;", "/users/logout"]
+        account_settings = [user_settings.max_age_restriction]
+        account_features = True
+
+        # Generate Movie Lists with User Preferences
+        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
+        generated_movie_lists = [] # Format = ['name', movie_data]
+        generated_movie_lists.append(ml.getWatchedMovies())
+
+    else:
+        return redirect("/users/login")
+    
+    return render(request, 'video_site/watch_history_page.html',
+                  {'ACCOUNT_INFO': account_info,
+                   'ACCOUNT_LINKS': account_links,
+                   'ACCOUNT_SETTINGS': account_settings,
+                   'ACCOUNT_FEATURES': account_features,
+                   'MOVIE_LIST': generated_movie_lists,
+                   })
+
 # Render Movie Player Webpage
 def movie_player(request, movie_id):
+    watch_progress = 0
     if request.user.is_authenticated:
         # Retrieve User info
         user = get_user_model().objects.get(id=request.user.id)
@@ -105,6 +135,15 @@ def movie_player(request, movie_id):
         # Create Movie Listing
         ml = ML.MovieListing(user_settings.max_age_restriction)
 
+        # Get watch progress of user
+        try:
+            watch_progress = data.WatchEntry.objects.get(user_key=user, movie_key=movie_id).watch_progress
+            if watch_progress >= data.Movie.objects.get(movie_id=movie_id).file_duration_seconds:
+                watch_progress = 0
+
+        except:
+            watch_progress = 0
+
     else:
         # Render info if Guest Account is being used
         account_info = ["Guest", "Login", "Register"]
@@ -118,6 +157,12 @@ def movie_player(request, movie_id):
     # Fetch the movie data
     formatted_data = ml.getMovieById(movie_id)
 
+    # Fetch actor data
+    actors = data.MovieActorEntry.objects.filter(movie_key=movie_id)
+    actor_list = []
+    for actor in actors:
+        actor_list.append(actor.actor_key.first_name + " " + actor.actor_key.last_name)
+
     # Return 404 if requested movie doesn't exist
     if not formatted_data:
         return render(request, 'video_site/404.html', status=404)
@@ -130,6 +175,8 @@ def movie_player(request, movie_id):
                    'ACCOUNT_SETTINGS': account_settings,
                    'ACCOUNT_FEATURES': account_features,
                    'HLS_URL': hls_playlist_url,
+                   'WATCH_PROGRESS': watch_progress,
+                   'ACTOR_LIST': actor_list,
                    'MOVIE_DATA': formatted_data[0],
                    'AGE_RATING': formatted_data[1],
                    'DURATION': formatted_data[2],

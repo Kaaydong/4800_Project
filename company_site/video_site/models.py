@@ -10,6 +10,7 @@ class Movie(models.Model):
     age_restriction = models.IntegerField(default=1)
     release_date = models.DateField()
     duration_seconds = models.IntegerField()
+    file_duration_seconds = models.IntegerField(default=1)
     created_at = models.DateField()
     activated_at = models.DateField()
     modified_at = models.DateField()

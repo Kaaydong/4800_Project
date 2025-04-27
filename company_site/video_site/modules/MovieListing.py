@@ -18,7 +18,7 @@ class MovieListing:
 
     # returns a movie as a tuple, with all of its required data
     # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted, isMovieBookmarked]
-    def __generateMovieCardInfo(self, movie):
+    def __generateMovieCardInfo(self, movie, isWatchEntry=False):
         duration = movie.duration_seconds
         restriction = movie.age_restriction
         genres = data.MovieGenreEntry.objects.filter(movie_key=movie.movie_id)
@@ -38,13 +38,24 @@ class MovieListing:
 
         # Create the String for how the movie duration should be displayed
         duration_formatted = ""
-        hours = duration // 3600
-        if hours > 0:
-            duration_formatted = str(duration // 3600) + "h "
-            duration_formatted += str(duration % 3600 // 60) + "m"
+        if not isWatchEntry:
+            hours = duration // 3600
+            if hours > 0:
+                duration_formatted = str(duration // 3600) + "h "
+                duration_formatted += str(duration % 3600 // 60) + "m"
+            else:
+                duration_formatted = str(duration // 60) + "m "
+                duration_formatted += str(duration % 60) + "s"
+        
         else:
-            duration_formatted = str(duration // 60) + "m "
-            duration_formatted += str(duration % 60) + "s"
+            file_duration = movie.file_duration_seconds
+            watch_timestamp = data.WatchEntry.objects.get(user_key=self.user_id, movie_key=movie.movie_id).watch_progress
+            watch_timestamp = int(watch_timestamp * 100 // file_duration)
+
+            if watch_timestamp >= 99:
+                duration_formatted = [100, "completed"]
+            else:
+                duration_formatted = [watch_timestamp, str(watch_timestamp) + "%"]
 
         # Create the Strong for how the genres should be displayed
         genres_formatted = ""
@@ -221,6 +232,17 @@ class MovieListing:
             returned_list.append(self.__generateMovieCardInfo(movie.movie_key))
 
         return ["Bookmarks", returned_list]
+    
+    # get a list of all movies watched by a user
+    def getWatchedMovies(self):
+        returned_list = []
+
+        watched_movies = data.WatchEntry.objects.filter(user_key=self.user_id)
+        for movie in watched_movies:
+            if movie.watch_progress >= 1:
+                returned_list.append(self.__generateMovieCardInfo(movie.movie_key, True))
+
+        return ["Watch History", returned_list]
 
     # Get Movie by ID
     def getMovieById(self, movie_id):
@@ -266,6 +288,7 @@ class MovieListing:
 
             # String match with actor's names
             actor_first_names = data.Actor.objects.values_list('first_name', flat=True)
+
             actor_middle_names = data.Actor.objects.values_list('middle_name', flat=True)
             actor_last_names = data.Actor.objects.values_list('last_name', flat=True)
             
