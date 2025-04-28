@@ -364,9 +364,11 @@
 
                     <div class="cast">
                         <h5><strong>Cast</h5>
-                        {% for actor in ACTOR_LIST %}
-                            <p class="movie-description">{{ actor }}</p>
-                        {% endfor %}
+                        <p class="movie-description">
+                            {% for actor in ACTOR_LIST %}
+                                {{ actor }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
                     </div>
 
                     <div class="genre">

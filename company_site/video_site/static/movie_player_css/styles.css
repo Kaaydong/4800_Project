@@ -30,12 +30,20 @@ html, body {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 50vh;
-    background: linear-gradient(to top, #000000, rgba(18, 18, 18, 0.6), transparent);
+    height: auto;
+    max-height: 90vh;
+    background: linear-gradient(
+        to top,
+        rgba(85, 85, 85, 0.7) 0%,     /* solid color starts here (bottom = 0%) */
+        rgba(85, 85, 85, 0.7) 50%,    /* solid color ends here (at 50% height) */
+        rgba(85, 85, 85, 0.3) 75%,    /* gradient starts fading here (at 50%-75%) */
+        rgba(85, 85, 85, 0) 90%      /* fully transparent at top (at 100%) */
+    );
     color: white;
     z-index: 2000;
     padding: 20px;
     display: block;
+    overflow-y: auto;
 }
 
 /* Modal Content */
@@ -51,13 +59,15 @@ html, body {
 .display-modal-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px;
 }
 
 .display-modal-title {
     position: relative;
+    top: 100px; /* can change top: and position: relative to just position:static */
+
     margin: 0 auto;
-    top: 100px; /* or fine-tune if needed */
     font-size: 2rem; /* adjust size as needed */
     font-weight: bold;
     text-align: center;
@@ -67,7 +77,7 @@ html, body {
     background: none;
     color: rgba(255, 255, 255, 0.7);
     border: none;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
 }
 
@@ -84,7 +94,7 @@ html, body {
     grid-template-areas:
         "release cast"
         "description genre";
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 3fr 2fr;
     grid-template-rows: auto auto;
     gap: 1rem;
     padding: 1rem;
@@ -104,23 +114,32 @@ html, body {
     grid-area: description;
     padding: 10px;
     border-radius: 10px;
-    max-width: 50%;
+    max-width: 75%;
 }
 
 .cast {
     grid-area: cast;
     position: relative;
     top: 75%;
-    left: 60%;
+    left: 20%;
+    width: 80%;
     padding: 10px;
     border-radius: 10px;
+
+}
+.cast p {
+    margin: 0;
+    line-height: 1.4;
+    word-wrap: break-word;
+
 }
 
 .genre {
     grid-area: genre;
     position: relative;
     top: 30%;
-    left: 60%;
+    left: 20%;
+    width: 80%;
     padding: 10px;
     border-radius: 10px;
 }
@@ -134,6 +153,17 @@ html, body {
     padding: 10px;
     display: flex;
     justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-areas:
+            "release"
+            "cast"
+            "genre"
+            "description";
+        grid-template-columns: 1fr;
+    }
 }
 
 .play-btn {
