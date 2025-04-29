@@ -1,8 +1,8 @@
 Copy Files
-scp -i Key_1.pem -r company_site admin@ec2-18-217-179-21.us-east-2.compute.amazonaws.com:/home/admin/
+scp -i Key_1.pem -r company_site admin@ec2-18.216.204.45.us-east-2.compute.amazonaws.com:/home/admin/
 
 Terminal
-ssh -i "Key_1.pem" admin@ec2-18-217-179-21.us-east-2.compute.amazonaws.com
+ssh -i "Key_1.pem" admin@ec2-18.216.204.45.us-east-2.compute.amazonaws.com
 
 Virtual Environment
 source venv/bin/activate

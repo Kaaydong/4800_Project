@@ -120,11 +120,7 @@
                                 <ul class="nav nav-tabs" role="tablist">
                                     <script>
                                         let url = 'ws://' + window.location.host + '/ws/socket-server/';
-                                        const socket = new WebSocket(url);
-                                        socket.onmessage = function(e) {
-                                            console.log(e.data);
-                                        }
-                                
+                                        const socket = new WebSocket(url);                                
                                         socket.onclose = function(e) {
                                             console.log("Socket closed!");
                                         }
@@ -136,7 +132,6 @@
                                                     expression: age_rating,
                                                 }
                                             ))
-                                            console.log(age_rating)
                                         }
                                     </script>
                                     {% if ACCOUNT_SETTINGS.0 == 1 %}
@@ -312,11 +307,12 @@
                 socket.onopen = function () {
                   console.log('WebSocket connected');
               
+                  var ended = false; // notify once that movie has ended
                   setInterval(() => {
-                    if (!video.paused && !video.ended) {
+                    if ((!video.paused && !video.ended) || (video.ended && !ended)) {
+                        ended = false;
                         const currentTime = video.currentTime;
                         const movieId = container.getAttribute("movie-id");
-                        console.log(movieId)
 
                         socket.send(JSON.stringify(
                         { 
@@ -324,14 +320,15 @@
                             current_time: currentTime,
                             movie_id: movieId,
                         }));
+
+                        // Video has ended and final timestamp sent to server
+                        if (video.ended && !ended){
+                            ended = true;
+                        }
                     }
                   }, 500);
                 };
-              
-                socket.onmessage = function (e) {
-                  console.log('Server:', e.data);
-                };
-              
+
                 socket.onclose = function () {
                   console.log('WebSocket disconnected');
                 };
@@ -339,6 +336,59 @@
                 document.getElementById('hls-video').addEventListener('loadedmetadata', function() {
                     this.currentTime = {{ WATCH_PROGRESS }};
                 }, false);
+
+
+                var player = videojs('hls-video');
+                // Define a new Button Component
+                var ButtonBackward = videojs.getComponent('Button');
+                var ButtonForward = videojs.getComponent('Button');
+
+                var PlayBackButton = videojs.extend(ButtonBackward, {
+                    constructor: function() {
+                        ButtonBackward.apply(this, arguments);
+                        this.controlText('Fast Forward');
+                        fetch('{% static 'assets/fast-forward-solid.svg' %}')
+                            .then(response => response.text())
+                            .then(svg => {
+                                this.el_.innerHTML = svg;
+                                this.el_.classList.add('vjs-play-back-button');
+                            });
+                    },
+                    handleClick: function() {
+                        var currentTime = player.currentTime();
+                        if (currentTime >= 5){
+                            player.currentTime(currentTime - 5);
+                        }
+                        else{
+                            player.currentTime(0);
+                        }
+                    }
+                });
+
+                var FastForwardButton = videojs.extend(ButtonForward, {
+                    constructor: function() {
+                        ButtonForward.apply(this, arguments);
+                        this.controlText('Fast Forward');
+                        fetch('{% static 'assets/fast-forward-solid.svg' %}')
+                            .then(response => response.text())
+                            .then(svg => {
+                                this.el_.innerHTML = svg;
+                                this.el_.classList.add('vjs-fast-forward-button');
+                            });
+                    },
+                    handleClick: function() {
+                        var currentTime = player.currentTime();
+                        player.currentTime(currentTime + 5);
+                    }
+                });
+
+                // Register the new button
+                videojs.registerComponent('PlayBackButton', PlayBackButton);
+                videojs.registerComponent('FastForwardButton', FastForwardButton);
+
+                // Add it to the player
+                player.getChild('controlBar').addChild('FastForwardButton', {}, 11); // 10 is position, you can change it
+                player.getChild('controlBar').addChild('PlayBackButton', {}, 10); // 10 is position, you can change it
             </script>
         </div>
 
@@ -352,7 +402,7 @@
                 </div>
                 <div class="display-modal-body info-grid">
                     <div class="release-info">
-                        <span>{{ MOVIE_DATA.release_date.year }}</span>
+                        <span>{{ MOVIE_DATA.release_date.year }} |</span>
                         <span>{{ DURATION }}</span>
                         <span>{{ AGE_RATING }}</span>
                     </div>
@@ -372,8 +422,8 @@
                     </div>
 
                     <div class="genre">
-                        <h5>Genre</h5>
-                        <p><strong>Genre:</strong> {{ GENRES }}</p>
+                        <h5><strong>Genres</h5>
+                        <p class="movie-description">{{ GENRES }}</p>
                     </div>
                 </div>
                 <div class="display-modal-footer">

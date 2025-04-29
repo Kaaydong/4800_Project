@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from .. import models as data
 from difflib import get_close_matches
 
+from . import MovieCardFormatting as mcf
+
 
 class MovieListing:
     def __init__(self, age_restriction = 4, user_id = -1):
@@ -18,52 +20,18 @@ class MovieListing:
 
     # returns a movie as a tuple, with all of its required data
     # FORMAT = [movie, duration_formatted, restriction_formatted, genres_formatted, isMovieBookmarked]
-    def __generateMovieCardInfo(self, movie, isWatchEntry=False):
+    def __generateMovieCardInfo(self, movie):
         duration = movie.duration_seconds
-        restriction = movie.age_restriction
         genres = data.MovieGenreEntry.objects.filter(movie_key=movie.movie_id)
 
         # Create the String for how the age restriction should be displayed
-        restriction_formatted = ""
-        if restriction == 1:
-            restriction_formatted = " | G | "
-        elif restriction == 2:
-            restriction_formatted = " | PG | "
-        elif restriction == 3:
-            restriction_formatted = " | PG-13 | "
-        elif restriction == 4:
-            restriction_formatted = " | R | "
-        else:
-            restriction_formatted = " | NR | "
+        restriction_formatted = mcf.returnAgeRatingCardFormatted(movie.age_restriction)
 
         # Create the String for how the movie duration should be displayed
-        duration_formatted = ""
-        if not isWatchEntry:
-            hours = duration // 3600
-            if hours > 0:
-                duration_formatted = str(duration // 3600) + "h "
-                duration_formatted += str(duration % 3600 // 60) + "m"
-            else:
-                duration_formatted = str(duration // 60) + "m "
-                duration_formatted += str(duration % 60) + "s"
-        
-        else:
-            file_duration = movie.file_duration_seconds
-            watch_timestamp = data.WatchEntry.objects.get(user_key=self.user_id, movie_key=movie.movie_id).watch_progress
-            watch_timestamp = int(watch_timestamp * 100 // file_duration)
-
-            if watch_timestamp >= 99:
-                duration_formatted = [100, "completed"]
-            else:
-                duration_formatted = [watch_timestamp, str(watch_timestamp) + "%"]
+        duration_formatted = mcf.returnMovieDurationCardFormatted(duration)
 
         # Create the Strong for how the genres should be displayed
-        genres_formatted = ""
-        genres = genres[:3]
-        for i in range(0, len(genres)):
-            genres_formatted += genres[i].genre_key.genre
-            if i < len(genres) - 1:
-                genres_formatted += ", " 
+        genres_formatted = mcf.returnGenresCardFormatted(genres)
 
         # Determine whether the bookmark icon is activated or not
         isBookmarked = False
@@ -224,25 +192,6 @@ class MovieListing:
     # get 20 movies rated R
     def getMoviesForAdults(self):
         return ["For Adults", self.__getMoviesByAgeRestriction(4)]
-    
-    # get a list of all movies bookmarked by a user
-    def getBookmarkedMovies(self):
-        returned_list = []
-        for movie in self.bookmarks:
-            returned_list.append(self.__generateMovieCardInfo(movie.movie_key))
-
-        return ["Bookmarks", returned_list]
-    
-    # get a list of all movies watched by a user
-    def getWatchedMovies(self):
-        returned_list = []
-
-        watched_movies = data.WatchEntry.objects.filter(user_key=self.user_id)
-        for movie in watched_movies:
-            if movie.watch_progress >= 1:
-                returned_list.append(self.__generateMovieCardInfo(movie.movie_key, True))
-
-        return ["Watch History", returned_list]
 
     # Get Movie by ID
     def getMovieById(self, movie_id):

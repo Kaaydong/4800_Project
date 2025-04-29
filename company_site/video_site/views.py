@@ -11,19 +11,35 @@ from user_forms import models
 
 from . import models as data
 from .modules import MovieListing as ML
+from .modules.UserAccounts import UserFunctions as uf
 
-# Render Landing Webpage
-def landing_page(request):
-    if request.user.is_authenticated:
-        # Retrieve User info
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)   
-
+# Generate info for the toolbar, results depend on user authentication status
+def generateToolbarInfo(isAuthenticated, request=None, user_settings=None):
+    if isAuthenticated:
         # Render info if User is logged in
         account_info = [request.user.username, "Settings", "Logout"]
         account_links = ["javascript:;", "/users/logout"]
         account_settings = [user_settings.max_age_restriction]
         account_features = True
+    else:
+        # Render info if Guest Account is being used
+        account_info = ["Guest", "Login", "Register"]
+        account_links = ["/users/login", "/users/register"]
+        account_settings = [1]
+        account_features = False
+    
+    return [account_info, account_links, account_settings, account_features]
+
+
+# ====================================== Render Landing Webpage ============================================= #
+def landing_page(request):
+    if request.user.is_authenticated:
+        # Retrieve User info
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)   
+        
+        # Render info if User is logged in
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         # Generate Movie Lists with User Preferences
         ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
@@ -33,10 +49,7 @@ def landing_page(request):
 
     else:
         # Render info if Guest Account is being used
-        account_info = ["Guest", "Login", "Register"]
-        account_links = ["/users/login", "/users/register"]
-        account_settings = [1]
-        account_features = False
+        toolBarInfo = generateToolbarInfo(False)
 
         # Generate Movie Lists without User Preferences
         ml = ML.MovieListing()
@@ -53,84 +66,81 @@ def landing_page(request):
     generated_movie_lists.append(ml.getMoviesForTeens())
 
     return render(request, 'video_site/landing_page.html',
-                  {'ACCOUNT_INFO': account_info,
-                   'ACCOUNT_LINKS': account_links,
-                   'ACCOUNT_SETTINGS': account_settings,
-                   'ACCOUNT_FEATURES': account_features,
+                  {'ACCOUNT_INFO': toolBarInfo[0],
+                   'ACCOUNT_LINKS': toolBarInfo[1],
+                   'ACCOUNT_SETTINGS': toolBarInfo[2],
+                   'ACCOUNT_FEATURES': toolBarInfo[3],
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-# Render Bookmarks Webpage
+
+# ====================================== Render Bookmarks Webpage ============================================= #
+from .modules.Bookmarks.BookmarkListing import BookmarkListing
+
 def bookmarks_page(request):
     if request.user.is_authenticated:
         # Retrieve User info
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)       
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)         
 
         # Render info if User is logged in
-        account_info = [request.user.username, "Settings", "Logout"]
-        account_links = ["javascript:;", "/users/logout"]
-        account_settings = [user_settings.max_age_restriction]
-        account_features = True
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         # Generate Movie Lists with User Preferences
-        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
-        generated_movie_lists = [] # Format = ['name', movie_data]
-        generated_movie_lists.append(ml.getBookmarkedMovies())
+        listing = BookmarkListing(user_settings.max_age_restriction, request.user.id)
+        generated_movie_lists = [listing.getBookmarkedMovies()]
 
     else:
+        # Deny access if user is unauthenticated
         return redirect("/users/login")
     
     return render(request, 'video_site/bookmarks_page.html',
-                  {'ACCOUNT_INFO': account_info,
-                   'ACCOUNT_LINKS': account_links,
-                   'ACCOUNT_SETTINGS': account_settings,
-                   'ACCOUNT_FEATURES': account_features,
+                  {'ACCOUNT_INFO': toolBarInfo[0],
+                   'ACCOUNT_LINKS': toolBarInfo[1],
+                   'ACCOUNT_SETTINGS': toolBarInfo[2],
+                   'ACCOUNT_FEATURES': toolBarInfo[3],
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-# Render Watch History Webpage
+# ====================================== Render Watch History Webpage ============================================= #
+from .modules.WatchHistory.WatchHistoryListing import WatchHistoryListing
+
 def watch_history_page(request):
     if request.user.is_authenticated:
         # Retrieve User info
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)       
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)        
 
         # Render info if User is logged in
-        account_info = [request.user.username, "Settings", "Logout"]
-        account_links = ["javascript:;", "/users/logout"]
-        account_settings = [user_settings.max_age_restriction]
-        account_features = True
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         # Generate Movie Lists with User Preferences
-        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
-        generated_movie_lists = [] # Format = ['name', movie_data]
-        generated_movie_lists.append(ml.getWatchedMovies())
+        listing = WatchHistoryListing(user_settings.max_age_restriction, request.user.id)
+        generated_movie_lists = [listing.getWatchedMovies()]
 
     else:
+        # Deny access if user is unauthenticated
         return redirect("/users/login")
     
     return render(request, 'video_site/watch_history_page.html',
-                  {'ACCOUNT_INFO': account_info,
-                   'ACCOUNT_LINKS': account_links,
-                   'ACCOUNT_SETTINGS': account_settings,
-                   'ACCOUNT_FEATURES': account_features,
+                  {'ACCOUNT_INFO': toolBarInfo[0],
+                   'ACCOUNT_LINKS': toolBarInfo[1],
+                   'ACCOUNT_SETTINGS': toolBarInfo[2],
+                   'ACCOUNT_FEATURES': toolBarInfo[3],
                    'MOVIE_LIST': generated_movie_lists,
                    })
 
-# Render Movie Player Webpage
+
+# ====================================== Render Movie Player Webpage ============================================= #
 def movie_player(request, movie_id):
     watch_progress = 0
     if request.user.is_authenticated:
         # Retrieve User info
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)     
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)      
 
         # Render info if User is logged in
-        account_info = [request.user.username, "Settings", "Logout"]
-        account_links = ["javascript:;", "/users/logout"]
-        account_settings = [user_settings.max_age_restriction]
-        account_features = True
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         # Create Movie Listing
         ml = ML.MovieListing(user_settings.max_age_restriction)
@@ -146,10 +156,7 @@ def movie_player(request, movie_id):
 
     else:
         # Render info if Guest Account is being used
-        account_info = ["Guest", "Login", "Register"]
-        account_links = ["/users/login", "/users/register"]
-        account_settings = [1]
-        account_features = False
+        toolBarInfo = generateToolbarInfo(False)
 
         # Create Movie Listing
         ml = ML.MovieListing()
@@ -170,10 +177,10 @@ def movie_player(request, movie_id):
     hls_playlist_url = reverse('serve_hls_playlist', args=[movie_id])
 
     return render(request, 'video_site/movie_player.html',
-                  {'ACCOUNT_INFO': account_info,
-                   'ACCOUNT_LINKS': account_links,
-                   'ACCOUNT_SETTINGS': account_settings,
-                   'ACCOUNT_FEATURES': account_features,
+                  {'ACCOUNT_INFO': toolBarInfo[0],
+                   'ACCOUNT_LINKS': toolBarInfo[1],
+                   'ACCOUNT_SETTINGS': toolBarInfo[2],
+                   'ACCOUNT_FEATURES': toolBarInfo[3],
                    'HLS_URL': hls_playlist_url,
                    'WATCH_PROGRESS': watch_progress,
                    'ACTOR_LIST': actor_list,
@@ -202,6 +209,7 @@ def serve_hls_playlist(request, movie_id):
     except (data.Movie.DoesNotExist, FileNotFoundError):
         return HttpResponse("Video or HLS playlist not found", status=404)
 
+
 # Serve a HLS segement of a movie
 def serve_hls_segment(request, movie_id, segment_name):
     try:
@@ -217,7 +225,7 @@ def serve_hls_segment(request, movie_id, segment_name):
         return HttpResponse("Video or HLS segment not found", status=404)
     
 
-
+# Movie Search Page Functionality
 def search_view(request):
     # Retrieve values from user input
     query = request.GET.get('query')
@@ -233,23 +241,17 @@ def search_view(request):
     # Get required rendering information    
     if request.user.is_authenticated:
         # Retrieve User info
-        user = get_user_model().objects.get(id=request.user.id)
-        user_settings = models.Settings.objects.get(user_key=user)   
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)    
 
         # Render info if User is logged in
-        account_info = [request.user.username, "Settings", "Logout"]
-        account_links = ["javascript:;", "/users/logout"]
-        account_settings = [user_settings.max_age_restriction]
-        account_features = True
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
 
     else:
-        # Render info if Guest Account is being used
-        account_info = ["Guest", "Login", "Register"]
-        account_links = ["/users/login", "/users/register"]
-        account_settings = [1]
-        account_features = False
+        # Render info if User is logged in
+        toolBarInfo = generateToolbarInfo(False)
 
         ml = ML.MovieListing()
 
@@ -264,10 +266,10 @@ def search_view(request):
             results_found = True
 
     return render(request, 'video_site/search_page.html',
-                {'ACCOUNT_INFO': account_info,
-                'ACCOUNT_LINKS': account_links,
-                'ACCOUNT_SETTINGS': account_settings,
-                'ACCOUNT_FEATURES': account_features,
+                {'ACCOUNT_INFO': toolBarInfo[0],
+                'ACCOUNT_LINKS': toolBarInfo[1],
+                'ACCOUNT_SETTINGS': toolBarInfo[2],
+                'ACCOUNT_FEATURES': toolBarInfo[3],
                 'GENRES': genres,
                 'QUERY': query, 
                 'PAST_FILTER': filter,

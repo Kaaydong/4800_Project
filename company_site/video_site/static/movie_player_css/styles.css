@@ -1,3 +1,16 @@
+.vjs-fast-forward-button svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+}
+
+.vjs-play-back-button svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+    transform: rotate(180deg);
+}
+
 .video-container {
                position: absolute;
                top: 50%;
@@ -34,10 +47,10 @@ html, body {
     max-height: 90vh;
     background: linear-gradient(
         to top,
-        rgba(85, 85, 85, 0.7) 0%,     /* solid color starts here (bottom = 0%) */
-        rgba(85, 85, 85, 0.7) 50%,    /* solid color ends here (at 50% height) */
-        rgba(85, 85, 85, 0.3) 75%,    /* gradient starts fading here (at 50%-75%) */
-        rgba(85, 85, 85, 0) 90%      /* fully transparent at top (at 100%) */
+        rgba(40, 39, 39, .95) 50%,     /* solid color starts here (bottom = 0%) */
+        rgba(40, 39, 39, .95) 60%,    /* solid color ends here (at 50% height) */
+        rgba(40, 39, 39, 0.95) 80%,    /* gradient starts fading here (at 50%-75%) */
+        rgba(85, 85, 85, 0) 100%      /* fully transparent at top (at 100%) */
     );
     color: white;
     z-index: 2000;
@@ -66,11 +79,9 @@ html, body {
 .display-modal-title {
     position: relative;
     top: 100px; /* can change top: and position: relative to just position:static */
-
-    margin: 0 auto;
+    padding: 10px;
     font-size: 2rem; /* adjust size as needed */
     font-weight: bold;
-    text-align: center;
 }
 
 .close-btn {
