@@ -1,12 +1,17 @@
 from ...models import WatchEntry
 
+
+# Get a list of all watch entries for a user
 def getWatchEntriesByUser(user_id):
     return WatchEntry.objects.filter(user_key=user_id)
 
-
+# Get a specific watch entry of a movie for a user
 def getWatchEntryByUserAndMovies(user_id, movie_id):
     return WatchEntry.objects.get(user_key=user_id, movie_key=movie_id)
 
+# Get a list of watch entries for a user, filtered by age restriction
+def getWatchEntryByUserAndAgeRestriction(user_id, age_restriction):
+    return WatchEntry.objects.filter(user_key=user_id, movie_key__age_restriction__lte=age_restriction)
 
 # Returns a list that contains the percentage of a movie watched
 # - 1st element is the int representation

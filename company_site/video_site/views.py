@@ -1,16 +1,7 @@
-import copy
-import os 
-from django.shortcuts import render
-from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import FileResponse, HttpResponse
-
 from django.conf import settings
-from user_forms import models
 
-from . import models as data
-from .modules import MovieListing as ML
 from .modules.UserAccounts import UserFunctions as uf
 
 # Generate info for the toolbar, results depend on user authentication status
@@ -32,21 +23,20 @@ def generateToolbarInfo(isAuthenticated, request=None, user_settings=None):
 
 
 # ====================================== Render Landing Webpage ============================================= #
+from .modules.Movies import MovieListing as ML
+
 def landing_page(request):
     if request.user.is_authenticated:
         # Retrieve User info
         user = uf.getUserById(request.user.id)
-        user_settings = uf.getUserSettingsByUser(user)   
+        user_settings = uf.getUserSettingsByUser(user)
+        age_restriction = user_settings.max_age_restriction
         
         # Render info if User is logged in
         toolBarInfo = generateToolbarInfo(True, request, user_settings)
 
         # Generate Movie Lists with User Preferences
-        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
-
-        generated_movie_lists = [] # Format = ['name', movie_data]
-        generated_movie_lists.append(ml.getUserRecommended())
-
+        ml = ML.MovieListing(age_restriction, request.user.id)
     else:
         # Render info if Guest Account is being used
         toolBarInfo = generateToolbarInfo(False)
@@ -54,16 +44,8 @@ def landing_page(request):
         # Generate Movie Lists without User Preferences
         ml = ML.MovieListing()
 
-        generated_movie_lists = [] # Format = ['name', movie_data]
-        generated_movie_lists.append(ml.getRandomMovies())
 
-    # Add more categories
-
-    generated_movie_lists.append(ml.getTopDaily())
-    generated_movie_lists.append(ml.getTopWeekly())
-    generated_movie_lists.append(ml.getTopAnnually())
-    generated_movie_lists.append(ml.getMoviesForKids())
-    generated_movie_lists.append(ml.getMoviesForTeens())
+    generated_movie_lists = ml.returnListOfMovieLists()
 
     return render(request, 'video_site/landing_page.html',
                   {'ACCOUNT_INFO': toolBarInfo[0],
@@ -131,7 +113,69 @@ def watch_history_page(request):
                    })
 
 
+# ====================================== Render Watch History Webpage ============================================= #
+from .modules.Search.SearchListing import SearchListing
+from .modules.MovieData import MovieDataFunctions
+
+# Movie Search Page Functionality
+def search_view(request):
+    # Retrieve values from user input
+    query = request.GET.get('query')
+    filter = request.GET.get('genre_filter')
+    results = []
+
+    # Turn genre_id from filter to int
+    #   filter == None during first visit
+    #   filter == -1 if filter is set to None and user presses search
+    if filter:
+        filter = int(filter)
+
+    # Get required rendering information    
+    if request.user.is_authenticated:
+        # Retrieve User info
+        user = uf.getUserById(request.user.id)
+        user_settings = uf.getUserSettingsByUser(user)    
+
+        # Render info if User is logged in
+        toolBarInfo = generateToolbarInfo(True, request, user_settings)
+
+        sl = SearchListing(user_settings.max_age_restriction, request.user.id)
+    else:
+        # Render info if User is logged in
+        toolBarInfo = generateToolbarInfo(False)
+
+        sl = SearchListing()
+
+    # Get a List of genres for the filter option
+    genres = MovieDataFunctions.getAllGenres()
+
+    # Query database for movies matching the input query and genre filter
+    results_found = False
+    if query or filter:
+        results = [sl.getMoviesByQuery(query, filter)]
+        if len(results[0][1]) != 0:
+            results_found = True
+
+    return render(request, 'video_site/search_page.html',
+                {'ACCOUNT_INFO': toolBarInfo[0],
+                'ACCOUNT_LINKS': toolBarInfo[1],
+                'ACCOUNT_SETTINGS': toolBarInfo[2],
+                'ACCOUNT_FEATURES': toolBarInfo[3],
+                'GENRES': genres,
+                'QUERY': query, 
+                'PAST_FILTER': filter,
+                'RESULTS': results,
+                'RESULTS_FOUND': results_found,
+                })
+
+    
+
+
 # ====================================== Render Movie Player Webpage ============================================= #
+from .modules.WatchHistory import WatchHistoryFunctions
+from .modules.MovieData import MovieDataFunctions
+
+
 def movie_player(request, movie_id):
     watch_progress = 0
     if request.user.is_authenticated:
@@ -147,8 +191,8 @@ def movie_player(request, movie_id):
 
         # Get watch progress of user
         try:
-            watch_progress = data.WatchEntry.objects.get(user_key=user, movie_key=movie_id).watch_progress
-            if watch_progress >= data.Movie.objects.get(movie_id=movie_id).file_duration_seconds:
+            watch_progress = WatchHistoryFunctions.getWatchEntryByUserAndMovies(user, movie_id).watch_progress
+            if watch_progress >= MovieDataFunctions.getMovieById(movie_id).file_duration_seconds:
                 watch_progress = 0
 
         except:
@@ -165,7 +209,7 @@ def movie_player(request, movie_id):
     formatted_data = ml.getMovieById(movie_id)
 
     # Fetch actor data
-    actors = data.MovieActorEntry.objects.filter(movie_key=movie_id)
+    actors = MovieDataFunctions.getAllMovieActorEntriesOfMovie(movie_id)
     actor_list = []
     for actor in actors:
         actor_list.append(actor.actor_key.first_name + " " + actor.actor_key.last_name)
@@ -191,90 +235,14 @@ def movie_player(request, movie_id):
                    'BOOKMARKED': formatted_data[4],
                    })
 
+
+# ====================================== Render Movie Player Video Content ============================================= #
+from .modules.MovieViewing import HlsFunctions
+
 # Serve Movie given movie ID
 def serve_hls_playlist(request, movie_id):
-    try:
-        movie = get_object_or_404(data.Movie, pk=movie_id)
-        hls_playlist_path = settings.BASE_DIR / "videos" / movie.movie_file_url
-
-        with open(hls_playlist_path, 'r') as m3u8_file:
-            m3u8_content = m3u8_file.read()
-
-        base_url = request.build_absolute_uri('/') 
-        serve_hls_segment_url = base_url +"serve_hls_segment/" + str(movie_id)
-        m3u8_content = m3u8_content.replace('{{ dynamic_path }}', serve_hls_segment_url)
-
-        return HttpResponse(m3u8_content, content_type='application/vnd.apple.mpegurl')
-    
-    except (data.Movie.DoesNotExist, FileNotFoundError):
-        return HttpResponse("Video or HLS playlist not found", status=404)
-
+    return HlsFunctions.serve_hls_playlist(request, movie_id)
 
 # Serve a HLS segement of a movie
 def serve_hls_segment(request, movie_id, segment_name):
-    try:
-        movie = get_object_or_404(data.Movie, pk=movie_id)
-        hls_playlist_path = settings.BASE_DIR / "videos" / movie.movie_file_url
-
-        hls_directory = os.path.dirname(hls_playlist_path)
-        segment_path = os.path.join(hls_directory, segment_name)
-
-        # Serve the HLS segment as a binary file response
-        return FileResponse(open(segment_path, 'rb'))
-    except (data.Movie.DoesNotExist, FileNotFoundError):
-        return HttpResponse("Video or HLS segment not found", status=404)
-    
-
-# Movie Search Page Functionality
-def search_view(request):
-    # Retrieve values from user input
-    query = request.GET.get('query')
-    filter = request.GET.get('genre_filter')
-    results = []
-
-    # Turn genre_id from filter to int
-    #   filter == None during first visit
-    #   filter == -1 if filter is set to None and user presses search
-    if filter:
-        filter = int(filter)
-
-    # Get required rendering information    
-    if request.user.is_authenticated:
-        # Retrieve User info
-        user = uf.getUserById(request.user.id)
-        user_settings = uf.getUserSettingsByUser(user)    
-
-        # Render info if User is logged in
-        toolBarInfo = generateToolbarInfo(True, request, user_settings)
-
-        ml = ML.MovieListing(user_settings.max_age_restriction, request.user.id)
-
-    else:
-        # Render info if User is logged in
-        toolBarInfo = generateToolbarInfo(False)
-
-        ml = ML.MovieListing()
-
-    # Get a List of genres for the filter option
-    genres = data.Genre.objects.all()
-
-    # Query database for movies matching the input query and genre filter
-    results_found = False
-    if query or filter:
-        results = [ml.getMoviesByQuery(query, filter)]
-        if len(results[0][1]) != 0:
-            results_found = True
-
-    return render(request, 'video_site/search_page.html',
-                {'ACCOUNT_INFO': toolBarInfo[0],
-                'ACCOUNT_LINKS': toolBarInfo[1],
-                'ACCOUNT_SETTINGS': toolBarInfo[2],
-                'ACCOUNT_FEATURES': toolBarInfo[3],
-                'GENRES': genres,
-                'QUERY': query, 
-                'PAST_FILTER': filter,
-                'RESULTS': results,
-                'RESULTS_FOUND': results_found,
-                })
-
-    
+    return HlsFunctions.serve_hls_segment(request, movie_id, segment_name)
