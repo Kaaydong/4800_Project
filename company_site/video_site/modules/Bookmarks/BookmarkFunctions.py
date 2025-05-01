@@ -1,4 +1,5 @@
 from ...models import BookmarkEntry
+from ..MovieData import MovieDataFunctions as mdf
 
 # Return all bookmark entries belonging to a user
 def getBookmarkEntriesByUser(user_id):
@@ -14,3 +15,13 @@ def isMovieBookmarked(movie_id, bookmarks):
         isBookmarked = False
 
     return isBookmarked
+
+# Creates a new bookmark entry given a user id and movie id
+def createBookmarkEntry(user_id, movie_id):
+    bookmark = BookmarkEntry(user_key=user_id, movie_key=mdf.getMovieById(movie_id))
+    bookmark.save()
+
+# Delete BookmarkEntry by user key and movie key
+def deleteBookmarkEntry(user_id, movie_id):
+    user_bookmark = BookmarkEntry.objects.get(user_key=user_id, movie_key=movie_id)
+    user_bookmark.delete()

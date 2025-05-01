@@ -1,4 +1,7 @@
+import datetime
+
 from ...models import WatchEntry
+from ..MovieData import MovieDataFunctions as mdf
 
 # Get a list of all watch entries for a user
 def getWatchEntriesByUser(user_id):
@@ -27,4 +30,15 @@ def getWatchEntryTimestampFormatted(user_id, movie):
 
     return timestamp_formatted
 
+# Create a new watch entry for a user and movie
+def createWatchEntry(user_id, movie_id, time):
+    user_watch_entry = WatchEntry(user_key=user_id, movie_key=mdf.getMovieById(movie_id), watch_progress=time, updated_at=datetime.date.today())
+    user_watch_entry.save()
+
+# Update a specific watch entry for a user and movie
+def updateWatchEntry(user_id, movie_id, time):
+    user_watch_entry = WatchEntry.objects.get(user_key=user_id, movie_key=mdf.getMovieById(movie_id))
+    user_watch_entry.watch_progress = time
+    user_watch_entry.updated_at = datetime.date.today()
+    user_watch_entry.save()
 

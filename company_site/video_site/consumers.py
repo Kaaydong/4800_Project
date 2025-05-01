@@ -1,15 +1,9 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
-import datetime
 
-from django.contrib.auth import get_user_model
-from . import models as data
-from user_forms import models as user_data_models
-
-from django.core.serializers import serialize
-
-from channels.db import database_sync_to_async
-
+from .modules.UserAccounts import UserFunctions as uf
+from .modules.Bookmarks import BookmarkFunctions as bf
+from .modules.WatchHistory import WatchHistoryFunctions as whf
 
 class ConnectionTest(WebsocketConsumer):
     def connect(self):
@@ -27,7 +21,7 @@ class ConnectionTest(WebsocketConsumer):
             expression = text_data_json['expression']
 
             # Save User Settings Interaction
-            user_settings = user_data_models.Settings.objects.get(user_key=self.user)
+            user_settings = uf.getUserSettingsByUser(self.user)
             user_settings.max_age_restriction = int(expression)
             user_settings.save()
 
@@ -37,12 +31,10 @@ class ConnectionTest(WebsocketConsumer):
 
             try:
                 # Removes bookmark
-                user_bookmark = data.BookmarkEntry.objects.get(movie_key=bookmark_key)
-                user_bookmark.delete()
+                bf.deleteBookmarkEntry(self.user, bookmark_key)
             except:
                 # Creates bookmark
-                bookmark = data.BookmarkEntry(user_key=self.user, movie_key=data.Movie.objects.get(pk=bookmark_key))
-                bookmark.save()
+                bf.createBookmarkEntry(self.user, bookmark_key)
 
         elif key == "video_time":
 
@@ -50,16 +42,9 @@ class ConnectionTest(WebsocketConsumer):
                 time = int(text_data_json['current_time'])
                 movieId = int(text_data_json['movie_id'])
 
-                movie = data.Movie.objects.get(pk=movieId)
-
                 try:
                     # Update current watch entry
-                    user_watch_entry = data.WatchEntry.objects.get(user_key=self.user, movie_key=movie)
-                    user_watch_entry.watch_progress = time
-                    user_watch_entry.updated_at = datetime.date.today()
-                    user_watch_entry.save()
-                
+                    whf.updateWatchEntry(self.user, movieId, time)
                 except:
                     # Create new watch entry
-                    user_watch_entry = data.WatchEntry(user_key=self.user, movie_key=movie, watch_progress=time, updated_at=datetime.date.today())
-                    user_watch_entry.save()
+                    whf.createWatchEntry(self.user, movieId, time)
