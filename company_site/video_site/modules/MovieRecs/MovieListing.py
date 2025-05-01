@@ -2,7 +2,7 @@ import random
 
 from ..MovieData import MovieDataFunctions as mdf
 from ..WatchHistory import WatchHistoryFunctions as whf
-from .MoviesFunctions import MoviesFunctions
+from .MovieListingFunctions import MovieListingFunctions
 
 class MovieListing:
     def __init__(self, age_restriction = 4, user_id = -1):
@@ -10,7 +10,7 @@ class MovieListing:
         self.age_restriction = age_restriction
         self.user_id = user_id
         
-        self.mf = MoviesFunctions(age_restriction, user_id)
+        self.mf = MovieListingFunctions(age_restriction, user_id)
 
     # Return a list of all movie lists to be rendered
     def returnListOfMovieLists(self):

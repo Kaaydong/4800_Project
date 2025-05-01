@@ -1,5 +1,5 @@
 from ..MovieData import MovieDataFunctions as mdf
-from ..Movies.MoviesFunctions import MoviesFunctions
+from ..MovieRecs.MovieListingFunctions import MovieListingFunctions
 from . import SearchFunctions as sf
 
 class SearchListing:
@@ -9,7 +9,7 @@ class SearchListing:
         self.movie_stats = mdf.getAllMovieStats()
 
         self.user_id = user_id
-        self.mf = MoviesFunctions(age_restriction, user_id)
+        self.mf = MovieListingFunctions(age_restriction, user_id)
 
     # Get Movie by a String query and Genre filter
     def getMoviesByQuery(self, query, filter):

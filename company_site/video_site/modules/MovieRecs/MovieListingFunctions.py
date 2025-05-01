@@ -3,7 +3,7 @@ from .. import MovieCardFormatting as mcf
 from ..Bookmarks import BookmarkFunctions as bf
 from ..MovieData import MovieDataFunctions as mdf
 
-class MoviesFunctions:
+class MovieListingFunctions:
     def __init__(self, age_restriction, user_id):
         # This initializes the age_restriction to the value passed in or 4 by default
         self.age_restriction = age_restriction

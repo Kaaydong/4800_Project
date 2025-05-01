@@ -1,6 +1,5 @@
 from ...models import WatchEntry
 
-
 # Get a list of all watch entries for a user
 def getWatchEntriesByUser(user_id):
     return WatchEntry.objects.filter(user_key=user_id)

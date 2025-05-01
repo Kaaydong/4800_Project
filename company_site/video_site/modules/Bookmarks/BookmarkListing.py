@@ -20,7 +20,7 @@ class BookmarkListing:
         duration_formatted = mcf.returnMovieDurationCardFormatted(movie.duration_seconds)
 
         # Create the Strong for how the genres should be displayed
-        genres = mdf.getMovieGenreEntryByMovie(movie.movie_id)
+        genres = mdf.getGenreEntriesOfMovie(movie.movie_id)
         genres_formatted = mcf.returnGenresCardFormatted(genres)
 
         # Determine whether the bookmark icon is activated or not

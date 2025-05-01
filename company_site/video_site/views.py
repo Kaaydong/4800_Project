@@ -23,7 +23,7 @@ def generateToolbarInfo(isAuthenticated, request=None, user_settings=None):
 
 
 # ====================================== Render Landing Webpage ============================================= #
-from .modules.Movies import MovieListing as ML
+from .modules.MovieRecs import MovieListing as ML
 
 def landing_page(request):
     if request.user.is_authenticated:
@@ -194,7 +194,6 @@ def movie_player(request, movie_id):
             watch_progress = WatchHistoryFunctions.getWatchEntryByUserAndMovies(user, movie_id).watch_progress
             if watch_progress >= MovieDataFunctions.getMovieById(movie_id).file_duration_seconds:
                 watch_progress = 0
-
         except:
             watch_progress = 0
 
@@ -237,7 +236,7 @@ def movie_player(request, movie_id):
 
 
 # ====================================== Render Movie Player Video Content ============================================= #
-from .modules.MovieViewing import HlsFunctions
+from .modules.MoviePlayer import HlsFunctions
 
 # Serve Movie given movie ID
 def serve_hls_playlist(request, movie_id):
