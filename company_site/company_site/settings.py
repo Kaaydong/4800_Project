@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://18.217.179.21']
+CSRF_TRUSTED_ORIGINS = ['http://18.216.204.45']
 
 
 # Application definition
@@ -176,4 +177,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
     BASE_DIR / "home_app/static",
+    BASE_DIR / "user_forms/static",
+    BASE_DIR / "video_site/static",
+    BASE_DIR / "videos",
 ]

@@ -19,3 +19,25 @@ python manage.py collectstatic
 
 # Make Migrations
 python manage.py migrate 
+
+
+
+
+
+# NGINX
+/etc/nginx/sites-available
+
+
+# CORS ERRORS HEHEHEHE
+chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security
+sudo systemctl stop nginx
+
+
+location ^~ /serve_hls_segment/[^/]+/ {
+        alias /home/admin/company_site/static_collection/;
+        expires -1;
+}
+
+
+
+nohup python manage.py runserver

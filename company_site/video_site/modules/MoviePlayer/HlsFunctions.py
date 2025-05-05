@@ -33,6 +33,8 @@ def serve_hls_segment(request, movie_id, segment_name):
         segment_path = os.path.join(hls_directory, segment_name)
 
         # Serve the HLS segment as a binary file response
+        print(str(segment_path))
         return FileResponse(open(segment_path, 'rb'))
-    except (Movie.DoesNotExist, FileNotFoundError):
+    except:
+        print("HLS ERROR FILE NOT FOUND")
         return HttpResponse("Video or HLS segment not found", status=404)
