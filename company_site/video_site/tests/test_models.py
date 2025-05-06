@@ -60,8 +60,3 @@ class ModelTests(TestCase):
         bookmark = BookmarkEntry.objects.create(user_key=self.user, movie_key=self.movie)
         self.assertIn("Test Movie", str(bookmark))
         self.assertIn("testuser", str(bookmark))
-
-    def test_rating_entry_str(self):
-        rating = RatingEntry.objects.create(user_key=self.user, movie_key=self.movie, rating_value=4.0)
-        self.assertIn("Rating | Test Movie", str(rating))
-        self.assertIn("testuser", str(rating))

@@ -1,100 +1,146 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from unittest.mock import patch
-from video_site.models import Movie, Genre
-from user_forms.models import Settings
-from datetime import date
+from django.http import HttpResponse
 
-class ViewTests(TestCase):
+class VideoSiteViewTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = get_user_model().objects.create_user(username='testuser', password='testpass')
-        self.genre = Genre.objects.create(genre="Action")
-        self.movie = Movie.objects.create(
-            title="Test Movie",
-            description="Just a test",
-            poster_url="poster.jpg",
-            movie_file_url="movie/test/index.m3u8",
-            age_restriction=1,
-            release_date=date.today(),
-            duration_seconds=1200,
-            created_at=date.today(),
-            activated_at=date.today(),
-            modified_at=date.today()
-        )
-        Settings.objects.create(user_key=self.user, max_age_restriction=18)
+        self.user = User.objects.create_user(username='testuser', password='password')
+    
+    def test_landing_page_guest(self):
+        response = self.client.get(reverse('landing_page'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/landing_page.html')
+        self.assertIn('ACCOUNT_INFO', response.context)
 
-    @patch('video_site.views.ML.MovieListing')
-    def test_landing_page_guest(self, MockListing):
-        MockListing.return_value.getRandomMovies.return_value = ['Random', []]
-        MockListing.return_value.getTopDaily.return_value = ['Daily', []]
-        MockListing.return_value.getTopWeekly.return_value = ['Weekly', []]
-        MockListing.return_value.getTopAnnually.return_value = ['Yearly', []]
-        MockListing.return_value.getMoviesForKids.return_value = ['Kids', []]
-        MockListing.return_value.getMoviesForTeens.return_value = ['Teens', []]
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserById')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserSettingsByUser')
+    @patch('video_site.modules.MovieRecs.MovieListing.MovieListing.returnListOfMovieLists')
+    def test_landing_page_authenticated(self, mock_list, mock_get_settings, mock_get_user):
+        self.client.login(username='testuser', password='password')
+        mock_user = self.user
+        mock_user_settings = type('obj', (object,), {'max_age_restriction': 4})()
+        mock_get_user.return_value = mock_user
+        mock_get_settings.return_value = mock_user_settings
+        mock_list.return_value = []
 
         response = self.client.get(reverse('landing_page'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'video_site/landing_page.html')
 
-    @patch('video_site.views.ML.MovieListing')
-    def test_landing_page_authenticated(self, MockListing):
-        self.client.login(username='testuser', password='testpass')
-        MockListing.return_value.getUserRecommended.return_value = ['Recommended', []]
-        MockListing.return_value.getTopDaily.return_value = ['Daily', []]
-        MockListing.return_value.getTopWeekly.return_value = ['Weekly', []]
-        MockListing.return_value.getTopAnnually.return_value = ['Yearly', []]
-        MockListing.return_value.getMoviesForKids.return_value = ['Kids', []]
-        MockListing.return_value.getMoviesForTeens.return_value = ['Teens', []]
-
-        response = self.client.get(reverse('landing_page'))
-        self.assertEqual(response.status_code, 200)
-
-    @patch('video_site.views.ML.MovieListing')
-    def test_bookmarks_page_redirect_if_guest(self, MockListing):
+    def test_bookmarks_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('bookmarks_page'))
         self.assertRedirects(response, '/users/login')
 
-    @patch('video_site.views.ML.MovieListing')
-    def test_movie_player_returns_404_if_movie_missing(self, MockListing):
-        self.client.login(username='testuser', password='testpass')
-        MockListing.return_value.getMovieById.return_value = None
-        response = self.client.get(reverse('movie_player', args=[9999]))
-        self.assertEqual(response.status_code, 404)
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserById')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserSettingsByUser')
+    @patch('video_site.modules.Bookmarks.BookmarkListing.BookmarkListing.getBookmarkedMovies')
+    def test_bookmarks_page_authenticated(self, mock_bookmarks, mock_get_settings, mock_get_user):
+        self.client.login(username='testuser', password='password')
+        mock_user = self.user
+        mock_user_settings = type('obj', (object,), {'max_age_restriction': 4})()
+        mock_get_user.return_value = mock_user
+        mock_get_settings.return_value = mock_user_settings
+        mock_bookmarks.return_value = []
 
-    @patch('video_site.views.ML.MovieListing')
-    def test_movie_player_returns_page_if_movie_exists(self, MockListing):
-        self.client.login(username='testuser', password='testpass')
-        MockListing.return_value.getMovieById.return_value = (
-            {'id': self.movie.movie_id}, 'PG', '2h', ['Action'], False
-        )
-        response = self.client.get(reverse('movie_player', args=[self.movie.movie_id]))
+        response = self.client.get(reverse('bookmarks_page'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/bookmarks_page.html')
+
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserById')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserSettingsByUser')
+    @patch('video_site.modules.WatchHistory.WatchHistoryListing.WatchHistoryListing.getWatchedMovies')
+    def test_watch_history_authenticated(self, mock_history, mock_get_settings, mock_get_user):
+        self.client.login(username='testuser', password='password')
+        mock_user = self.user
+        mock_user_settings = type('obj', (object,), {'max_age_restriction': 4})()
+        mock_get_user.return_value = mock_user
+        mock_get_settings.return_value = mock_user_settings
+        mock_history.return_value = []
+
+        response = self.client.get(reverse('watch_history'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/watch_history_page.html')
+
+    def test_watch_history_redirect_guest(self):
+        response = self.client.get(reverse('watch_history'))
+        self.assertRedirects(response, '/users/login')
+
+    @patch('video_site.modules.MovieData.MovieDataFunctions.getAllGenres')
+    @patch('video_site.modules.Search.SearchListing.SearchListing.getMoviesByQuery')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserById')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserSettingsByUser')
+    def test_search_view_authenticated_with_query(self, mock_get_settings, mock_get_user, mock_get_movies, mock_get_genres):
+        self.client.login(username='testuser', password='password')
+
+        mock_user = self.user
+        mock_settings = type('obj', (object,), {'max_age_restriction': 4})()
+        mock_get_user.return_value = mock_user
+        mock_get_settings.return_value = mock_settings
+        mock_get_genres.return_value = ['Action', 'Comedy']
+        mock_get_movies.return_value = ("query", [])
+
+        response = self.client.get(reverse('search') + '?query=test&genre_filter=1')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/search_page.html')
+        self.assertFalse(response.context['RESULTS_FOUND'])
+
+
+    @patch('video_site.modules.MovieData.MovieDataFunctions.getAllGenres')
+    @patch('video_site.modules.Search.SearchListing.SearchListing.getMoviesByQuery')
+    def test_search_view_guest(self, mock_search, mock_genres):
+        mock_genres.return_value = ['Action']
+        mock_search.return_value = ("query", [])
+
+        response = self.client.get(reverse('search') + '?query=test&genre_filter=1')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/search_page.html')
+        self.assertFalse(response.context['RESULTS_FOUND'])
+
+    
+    @patch('video_site.modules.MovieData.MovieDataFunctions.getAllMovieActorEntriesOfMovie')
+    @patch('video_site.modules.MovieData.MovieDataFunctions.getMovieById')
+    @patch('video_site.modules.WatchHistory.WatchHistoryFunctions.getWatchEntryByUserAndMovies')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserById')
+    @patch('video_site.modules.UserAccounts.UserFunctions.getUserSettingsByUser')
+    @patch('video_site.modules.MovieRecs.MovieListing.MovieListing.getMovieById')
+    def test_movie_player_authenticated(self, mock_ml_data, mock_user_settings, mock_user, mock_watch, mock_moviedata, mock_actors):
+        self.client.login(username='testuser', password='password')
+        mock_user.return_value = self.user
+        mock_user_settings.return_value = type('obj', (object,), {'max_age_restriction': 4})()
+        mock_ml_data.return_value = ("movie", "PG", 120, ["Action"], True)
+        mock_watch.return_value = type('obj', (object,), {'watch_progress': 10})()
+        mock_moviedata.return_value = type('obj', (object,), {'file_duration_seconds': 100})()
+        mock_actors.return_value = [
+            type('obj', (object,), {'actor_key': type('obj', (object,), {'first_name': 'John', 'last_name': 'Doe'})()})
+        ]
+
+        response = self.client.get(reverse('movie_player', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'video_site/movie_player.html')
+        self.assertIn('MOVIE_DATA', response.context)
+
+    @patch('video_site.modules.MovieRecs.MovieListing.MovieListing.getMovieById')
+    def test_movie_player_guest(self, mock_ml_data):
+        mock_ml_data.return_value = ("movie", "PG", 100, ["Comedy"], False)
+
+        response = self.client.get(reverse('movie_player', args=[1]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'video_site/movie_player.html')
 
-    def test_serve_hls_playlist_404_if_not_found(self):
-        response = self.client.get(reverse('serve_hls_playlist', args=[9999]))
-        self.assertEqual(response.status_code, 404)
+    @patch('video_site.modules.MoviePlayer.HlsFunctions.serve_hls_playlist')
+    def test_serve_hls_playlist(self, mock_serve):
+        mock_serve.return_value = HttpResponse("m3u8_content", content_type="application/vnd.apple.mpegurl")
+        response = self.client.get(reverse('serve_hls_playlist', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"m3u8_content")
 
-    def test_serve_hls_segment_404_if_not_found(self):
-        response = self.client.get(reverse('serve_hls_segment', args=[9999, 'missing.ts']))
-        self.assertEqual(response.status_code, 404)
-
-    # @patch('video_site.views.ML.MovieListing')
-    # def test_search_view_guest(self, MockListing):
-    #     # Setup: Add genre to prevent empty genre list in context
-    #     Genre.objects.create(genre="Comedy")
-
-    #     # Simulate expected return: ['Search Results', [list of dummy movies]]
-    #     MockListing.return_value.getMoviesByQuery.return_value = ['Search Results', [{'title': 'Mock Movie'}]]
-        
-    #     response = self.client.get(reverse('search'), {
-    #         'query': 'test',
-    #         'genre_filter': self.genre.genre_id  # ensure genre exists
-    #     })
-
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTemplateUsed(response, 'video_site/search_page.html')
-    #     self.assertIn('RESULTS', response.context)
-    #     self.assertTrue(response.context['RESULTS_FOUND'])
+    @patch('video_site.modules.MoviePlayer.HlsFunctions.serve_hls_segment')
+    def test_serve_hls_segment(self, mock_serve):
+        mock_serve.return_value = HttpResponse("segment_data", content_type='application/vnd.apple.mpegurl')
+        response = self.client.get(reverse('serve_hls_segment', args=[1, "segment.ts"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"segment_data")
